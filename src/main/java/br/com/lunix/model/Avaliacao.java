@@ -5,22 +5,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "empresas")
+import java.time.LocalDateTime;
+
+@Document(collection = "avaliacoes")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Empresa {
+public class Avaliacao {
 
     @Id
     private String id;
 
-    private String nome;
+    @DBRef
+    private Usuario usuario;
 
-    private String descricao;
+    @DBRef
+    private Jogo jogo;
 
-    private String paisOrigem;
+    private int nota;
 
-    private String urlLogo;
+    private String comentario;
+
+    private LocalDateTime dataCriacao = LocalDateTime.now();
 }
