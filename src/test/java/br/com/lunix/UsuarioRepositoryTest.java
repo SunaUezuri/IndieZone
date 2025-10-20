@@ -1,6 +1,6 @@
 package br.com.lunix;
 
-import br.com.lunix.model.Usuario;
+import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.Role;
 import br.com.lunix.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;

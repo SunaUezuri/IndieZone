@@ -1,6 +1,6 @@
 package br.com.lunix.repository;
 
-import br.com.lunix.model.Usuario;
+import br.com.lunix.model.entities.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

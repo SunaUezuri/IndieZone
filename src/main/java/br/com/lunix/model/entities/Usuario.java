@@ -1,4 +1,4 @@
-package br.com.lunix.model;
+package br.com.lunix.model.entities;
 
 import br.com.lunix.model.enums.Role;
 import lombok.*;

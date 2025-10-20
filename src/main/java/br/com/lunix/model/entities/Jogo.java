@@ -1,5 +1,6 @@
-package br.com.lunix.model;
+package br.com.lunix.model.entities;
 
+import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,8 @@ public class Jogo {
     private String descricao;
 
     private String urlCapa;
+
+    private ClassificacaoIndicativa classificacao;
 
     private List<Genero> generos = new ArrayList<>();
 

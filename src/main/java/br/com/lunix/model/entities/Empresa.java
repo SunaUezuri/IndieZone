@@ -1,4 +1,4 @@
-package br.com.lunix.model;
+package br.com.lunix.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
