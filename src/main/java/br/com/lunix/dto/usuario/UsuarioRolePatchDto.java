@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 public record UsuarioRolePatchDto(
-        @NotEmpty
+        @NotEmpty(message = "O usuário deve ter uma Role")
         Set<Role> roles
 ) {
 }

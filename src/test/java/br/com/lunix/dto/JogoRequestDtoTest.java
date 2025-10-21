@@ -81,6 +81,6 @@ public class JogoRequestDtoTest {
         assertThat(violations).hasSize(1);
         ConstraintViolation<JogoRequestDto> violation = violations.iterator().next();
 
-        assertThat(violation.getMessage()).isEqualTo("A data de lançamento é obrigatória.");
+        assertThat(violation.getMessage()).isEqualTo("A data de lançamento é obrigatória");
     }
 }

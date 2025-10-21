@@ -26,11 +26,10 @@ public class JogoRepositoryTest {
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     private Empresa devTest;
-
-    private Usuario devAutonomo;
 
     private Jogo jogo;
 
@@ -45,11 +44,6 @@ public class JogoRepositoryTest {
         devTest.setNome("Estúdio Teste");
         devTest.setPaisOrigem("Brasil");
         empresaRepository.save(devTest);
-
-        devAutonomo = new Usuario();
-        devAutonomo.setNome("Dev test");
-        devAutonomo.setEmail("dev@gmail.com");
-        usuarioRepository.save(devAutonomo);
     }
 
     @Test
@@ -159,17 +153,22 @@ public class JogoRepositoryTest {
 
     @Test
     public void deveEncontrarJogosPorDev() {
+        Usuario usuario = new Usuario();
+        usuario.setNome("Wesley");
+        usuario.setEmail("w@gmail.com");
+        usuarioRepository.save(usuario);
+
         Jogo jogo1 = new Jogo();
         jogo1.setTitulo("Jogo 1");
-        jogo1.setDevAutonomo(devAutonomo);
+        jogo1.setDevAutonomo(usuario);
         repository.save(jogo1);
 
         Jogo jogo2 = new Jogo();
         jogo2.setTitulo("Jogo 2");
-        jogo2.setDevAutonomo(devAutonomo);
+        jogo2.setDevAutonomo(usuario);
         repository.save(jogo2);
 
-        List<Jogo> resultado = repository.findByDevAutonomo(devAutonomo);
+        List<Jogo> resultado = repository.findByDevAutonomo(usuario);
         assertThat(resultado).hasSize(2);
         assertThat(resultado).extracting(Jogo::getTitulo).contains("Jogo 1", "Jogo 2");
     }

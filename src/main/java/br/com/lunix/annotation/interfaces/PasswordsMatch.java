@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordsMatch {
 
-    String message() default " As senhas não coincidem";
+    String message() default "As senhas não coincidem.";
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

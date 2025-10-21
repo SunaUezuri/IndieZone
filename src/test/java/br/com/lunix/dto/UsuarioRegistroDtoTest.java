@@ -33,13 +33,14 @@ public class UsuarioRegistroDtoTest {
 
         Set<ConstraintViolation<UsuarioRegistroDto>> violations = validator.validate(dto);
 
-        assertThat(violations).hasSize(4);
+        assertThat(violations).hasSize(5);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder(
                         "O nome é obrigatório.",
                         "O e-mail é obrigatório.",
                         "A senha é obrigatória.",
-                        "A confirmação de senha é obrigatória."
+                        "A confirmação de senha é obrigatória.",
+                        "A senha deve ter no mínimo 8 caracteres."
                 );
     }
 

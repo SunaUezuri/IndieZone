@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record JogoGenresPatchDto(@NotEmpty List<Genero> generos) {
+public record JogoGenresPatchDto(@NotEmpty(message = "O jogo deve ter ao menos um genero") List<Genero> generos) {
 }

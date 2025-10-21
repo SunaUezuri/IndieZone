@@ -8,11 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 public record UsuarioUpdateDto(
-        @NotBlank
+        @NotBlank(message = "O nome não pode ser vazio")
         String nome,
-        @NotEmpty
+        @NotEmpty(message = "O usuário deve ter uma Role")
         Set<Role> roles,
-        @NotNull
+        @NotNull(message = "É necessário dizer se o usuário é ativo ou não")
         Boolean ativo,
         String idEmpresa
 ) {

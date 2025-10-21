@@ -11,17 +11,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record JogoRequestDto(
-        @NotBlank
+        @NotBlank(message = "O título não pode estar vazio")
         String titulo,
-        @NotBlank
+        @NotBlank(message = "A descricao não pode estar vazia")
         String descricao,
         String urlCapa,
-        @NotNull
+        @NotNull(message = "A data de lançamento é obrigatória")
         @PastOrPresentDate
         LocalDate dataLancamento,
-        @NotNull
+        @NotNull(message = "A classificacao indicativa é obrigatória")
         ClassificacaoIndicativa classificacao,
-        @NotEmpty
+        @NotEmpty(message = "Um jogo deve ter ao menos um Genero")
         List<Genero> generos
 ) {
 }
