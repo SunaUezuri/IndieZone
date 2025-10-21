@@ -22,14 +22,16 @@ public class EmpresaRepositoryTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private Empresa empresa;
+
     @BeforeEach
     public void setup() {
         repository.deleteAll();
+        empresa = new Empresa();
     }
 
     @Test
     public void deveSalvarEBuscarEmpresaPorIdComSucesso() {
-        Empresa empresa = new Empresa();
         empresa.setNome("Team Cherry");
         empresa.setPaisOrigem("Austrália");
         empresa.setDescricao("Desenvolvedores de Hollow Knight");
@@ -45,7 +47,6 @@ public class EmpresaRepositoryTest {
 
     @Test
     public void deveEncontrarEmpresaPeloNomeIgnorandoCase() {
-        Empresa empresa = new Empresa();
         empresa.setNome("Team Cherry");
         empresa.setPaisOrigem("Austrália");
         empresa.setDescricao("Desenvolvedores de Hollow Knight");
@@ -86,9 +87,8 @@ public class EmpresaRepositoryTest {
 
     @Test
     public void naoDeveEncontrarEmpresaComNomeInexistente() {
-        Empresa empresaInexistente = new Empresa();
-        empresaInexistente.setNome("Inexistente");
-        repository.save(empresaInexistente);
+        empresa.setNome("Inexistente");
+        repository.save(empresa);
 
         Optional<Empresa> empresaNaoExiste = repository.findByNomeIgnoreCase("Ubisoft");
 
