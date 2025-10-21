@@ -1,6 +1,9 @@
 package br.com.lunix.dto.empresa;
 
+import br.com.lunix.dto.jogos.JogoResponseDto;
 import br.com.lunix.model.entities.Empresa;
 
-public record EmpresaDetalhesDto(Empresa empresa, List<JogoResponseDTO> jogos) {
+import java.util.List;
+
+public record EmpresaDetalhesDto(Empresa empresa, List<JogoResponseDto> jogos) {
 }
