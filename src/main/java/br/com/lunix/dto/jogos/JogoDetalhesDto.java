@@ -1,5 +1,6 @@
 package br.com.lunix.dto.jogos;
 
+import br.com.lunix.dto.avaliacao.AvaliacaoResponseDto;
 import br.com.lunix.model.entities.Jogo;
 
 import java.util.List;
