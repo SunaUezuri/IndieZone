@@ -3,6 +3,7 @@ package br.com.lunix.repository;
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.PrecoPlataforma;
+import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,11 @@ public class JogoRepositoryTest {
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    private UsuarioRepository usuarioRepository;
+
     private Empresa devTest;
+
+    private Usuario devAutonomo;
 
     private Jogo jogo;
 
@@ -40,10 +45,15 @@ public class JogoRepositoryTest {
         devTest.setNome("Estúdio Teste");
         devTest.setPaisOrigem("Brasil");
         empresaRepository.save(devTest);
+
+        devAutonomo = new Usuario();
+        devAutonomo.setNome("Dev test");
+        devAutonomo.setEmail("dev@gmail.com");
+        usuarioRepository.save(devAutonomo);
     }
 
     @Test
-    void deveSalvarEBuscarJogoComRelacionamentosEObjetosEmbutidos() {
+    public void deveSalvarEBuscarJogoComRelacionamentosEObjetosEmbutidos() {
         Jogo novoJogo = new Jogo();
         novoJogo.setTitulo("Aventura Completa");
         novoJogo.setEmpresa(devTest);
@@ -82,7 +92,7 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    void deveEncontrarJogosPorGenero() {
+    public void deveEncontrarJogosPorGenero() {
         Jogo jogoIndieAventura = new Jogo();
         jogoIndieAventura.setTitulo("Aventura Indie");
         jogoIndieAventura.setGeneros(List.of(Genero.ACAO, Genero.AVENTURA));
@@ -108,7 +118,7 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    void deveEncontrarJogosPorClassificacaoIndicativa() {
+    public void deveEncontrarJogosPorClassificacaoIndicativa() {
         Jogo jogoLivre1 = new Jogo();
         jogoLivre1.setTitulo("Fazendinha Feliz");
         jogoLivre1.setClassificacao(ClassificacaoIndicativa.LIVRE);
@@ -131,7 +141,7 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    void deveEncontrarJogosPorEmpresa() {
+    public void deveEncontrarJogosPorEmpresa() {
         Jogo jogo1 = new Jogo();
         jogo1.setTitulo("Jogo 1");
         jogo1.setEmpresa(devTest);
@@ -148,7 +158,26 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    void deveRetornarTop10JogosOrdenadosPorNotaMedia() {
+    public void deveEncontrarJogosPorDev() {
+        Jogo jogo1 = new Jogo();
+        jogo1.setTitulo("Jogo 1");
+        jogo1.setDevAutonomo(devAutonomo);
+        repository.save(jogo1);
+
+        Jogo jogo2 = new Jogo();
+        jogo2.setTitulo("Jogo 2");
+        jogo2.setDevAutonomo(devAutonomo);
+        repository.save(jogo2);
+
+        List<Jogo> resultado = repository.findByDevAutonomo(devAutonomo);
+        assertThat(resultado).hasSize(2);
+        assertThat(resultado).extracting(Jogo::getTitulo).contains("Jogo 1", "Jogo 2");
+    }
+
+
+
+    @Test
+    public void deveRetornarTop10JogosOrdenadosPorNotaMedia() {
         for (int i = 0; i <= 10; i++) {
             Jogo jogo = new Jogo();
             jogo.setTitulo("Jogo Nota " + i);
@@ -163,7 +192,7 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    void deveRetornarTop10JogosOrdenadosPorDataLancamento() {
+    public void deveRetornarTop10JogosOrdenadosPorDataLancamento() {
         for (int i = 1; i <= 11; i++) {
             Jogo jogo = new Jogo();
             jogo.setTitulo("Jogo Dia " + i);

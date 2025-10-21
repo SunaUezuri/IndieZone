@@ -43,6 +43,9 @@ public class Jogo {
     @DBRef
     private Empresa empresa;
 
+    @DBRef
+    private Usuario devAutonomo;
+
     private LocalDateTime ultimaAtualizacaoPrecos;
 
     private LocalDate dataLancamento;

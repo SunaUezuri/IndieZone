@@ -2,6 +2,7 @@ package br.com.lunix.repository;
 
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Jogo;
+import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -15,6 +16,8 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     List<Jogo> findByGeneros(Genero genero);
 
     List<Jogo> findByEmpresa(Empresa empresa);
+
+    List<Jogo> findByDevAutonomo(Usuario devAutonomo);
 
     List<Jogo> findByClassificacao(ClassificacaoIndicativa classificacao);
 
