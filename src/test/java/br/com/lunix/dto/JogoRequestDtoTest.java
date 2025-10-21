@@ -68,7 +68,7 @@ public class JogoRequestDtoTest {
     }
 
     @Test
-    void quandoDataDeLancamentoENulaDeveHaverViolacaoDeNotNull() {
+    public void quandoDataDeLancamentoENulaDeveHaverViolacaoDeNotNull() {
         var dto = new JogoRequestDto(
                 "Jogo Inválido", "Descrição OK", null,
                 null, // Data nula
