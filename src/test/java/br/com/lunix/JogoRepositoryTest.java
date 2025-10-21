@@ -2,6 +2,7 @@ package br.com.lunix;
 
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Jogo;
+import br.com.lunix.model.entities.PrecoPlataforma;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.repository.EmpresaRepository;
@@ -44,20 +45,30 @@ public class JogoRepositoryTest {
     }
 
     @Test
-    public void deveSalvarEBuscarJogoComSucesso() {
-        jogo.setTitulo("Aventura de Teste");
-        jogo.setEmpresa(devTest);
-        jogo.setGeneros(List.of(Genero.AVENTURA, Genero.PUZZLE));
-        jogo.setClassificacao(ClassificacaoIndicativa.DEZ);
+    void deveSalvarEBuscarJogoComRelacionamentosEObjetosEmbutidos() {
+        Jogo novoJogo = new Jogo();
+        novoJogo.setTitulo("Aventura Completa");
+        novoJogo.setEmpresa(devTest);
+        novoJogo.setGeneros(List.of(Genero.AVENTURA, Genero.ACAO));
 
-        Jogo jogoSalvo = repository.save(jogo);
+        PrecoPlataforma precoSteam = new PrecoPlataforma("Steam", 49.90, 99.90, 50, "url/steam");
+        PrecoPlataforma precoGog = new PrecoPlataforma("GOG", 99.90, 99.90, 0, "url/gog");
+        novoJogo.setPrecos(List.of(precoSteam, precoGog));
+
+        Jogo jogoSalvo = repository.save(novoJogo);
         Optional<Jogo> jogoBuscado = repository.findById(jogoSalvo.getId());
 
         assertThat(jogoBuscado).isPresent();
-        assertThat(jogoBuscado.get().getTitulo()).isEqualTo("Aventura de Teste");
-        assertThat(jogoBuscado.get().getEmpresa().getNome()).isEqualTo("Estúdio Teste");
-        assertThat(jogoBuscado.get().getGeneros())
-                .contains(Genero.AVENTURA, Genero.PUZZLE);
+        Jogo jogoEncontrado = jogoBuscado.get();
+
+        assertThat(jogoEncontrado.getTitulo()).isEqualTo("Aventura Completa");
+        assertThat(jogoEncontrado.getEmpresa().getNome()).isEqualTo("Estúdio Teste");
+        assertThat(jogoEncontrado.getGeneros()).contains(Genero.AVENTURA, Genero.ACAO);
+
+        assertThat(jogoEncontrado.getPrecos()).isNotNull();
+        assertThat(jogoEncontrado.getPrecos()).hasSize(2);
+        assertThat(jogoEncontrado.getPrecos().get(0).getNomeLoja()).isEqualTo("Steam");
+        assertThat(jogoEncontrado.getPrecos().get(0).getPrecoAtual()).isEqualTo(49.90);
     }
 
     @Test
