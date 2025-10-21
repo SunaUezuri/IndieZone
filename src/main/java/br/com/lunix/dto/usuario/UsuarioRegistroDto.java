@@ -1,6 +1,7 @@
 package br.com.lunix.dto.usuario;
 
 import br.com.lunix.annotation.interfaces.PasswordsMatch;
+import br.com.lunix.annotation.interfaces.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,6 +13,7 @@ public record UsuarioRegistroDto(
 
         @NotBlank(message = "O e-mail é obrigatório.")
         @Email(message = "Por favor, insira um e-mail válido.")
+        @UniqueEmail
         String email,
 
         @NotBlank(message = "A senha é obrigatória.")
@@ -19,6 +21,7 @@ public record UsuarioRegistroDto(
         String senha,
 
         @NotBlank(message = "A confirmação de senha é obrigatória.")
-        String confirmacaoSenha
+        String confirmacaoSenha,
+        String idEmpresa
 ) {
 }
