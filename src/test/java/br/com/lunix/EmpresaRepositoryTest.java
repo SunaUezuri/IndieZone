@@ -2,7 +2,7 @@ package br.com.lunix;
 
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.repository.EmpresaRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -29,27 +29,27 @@ public class EmpresaRepositoryTest {
 
     @Test
     public void deveSalvarEBuscarEmpresaPorIdComSucesso() {
-
         Empresa empresa = new Empresa();
         empresa.setNome("Team Cherry");
         empresa.setPaisOrigem("Austrália");
         empresa.setDescricao("Desenvolvedores de Hollow Knight");
-
         Empresa empresaSalva = repository.save(empresa);
         Optional<Empresa> empresaOptional = repository.findById(empresaSalva.getId());
 
         assertThat(empresaOptional).isPresent();
         assertThat(empresaOptional.get().getId()).isNotNull();
         assertThat(empresaOptional.get().getNome()).isEqualTo("Team Cherry");
+        assertThat(empresaOptional.get().getPaisOrigem()).isEqualTo("Austrália");
         assertThat(empresaOptional.get().getDescricao()).isEqualTo("Desenvolvedores de Hollow Knight");
     }
 
     @Test
     public void deveEncontrarEmpresaPeloNomeIgnorandoCase() {
-        Empresa teamCherry = new Empresa();
-        teamCherry.setNome("Team Cherry");
-        teamCherry.setPaisOrigem("Austrália");
-        repository.save(teamCherry);
+        Empresa empresa = new Empresa();
+        empresa.setNome("Team Cherry");
+        empresa.setPaisOrigem("Austrália");
+        empresa.setDescricao("Desenvolvedores de Hollow Knight");
+        repository.save(empresa);
 
         Optional<Empresa> buscadaPorMinusculas = repository.findByNomeIgnoreCase("team cherry");
         Optional<Empresa> buscadaPorMaiusculas = repository.findByNomeIgnoreCase("TEAM CHERRY");
@@ -82,5 +82,16 @@ public class EmpresaRepositoryTest {
         assertThat(empresasBrasileiras).hasSize(2);
         assertThat(empresasBrasileiras).extracting(Empresa::getNome)
                 .containsExactlyInAnyOrder("Empresa BR1", "Empresa BR2");
+    }
+
+    @Test
+    public void naoDeveEncontrarEmpresaComNomeInexistente() {
+        Empresa empresaInexistente = new Empresa();
+        empresaInexistente.setNome("Inexistente");
+        repository.save(empresaInexistente);
+
+        Optional<Empresa> empresaNaoExiste = repository.findByNomeIgnoreCase("Ubisoft");
+
+        assertThat(empresaNaoExiste).isNotPresent();
     }
 }

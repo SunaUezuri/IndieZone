@@ -2,7 +2,7 @@ package br.com.lunix;
 
 
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
