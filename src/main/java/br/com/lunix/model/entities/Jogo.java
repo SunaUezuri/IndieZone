@@ -43,7 +43,7 @@ public class Jogo {
     @DBRef
     private Empresa empresa;
 
-    private LocalDate ultimaAtualizacaoPrecos;
+    private LocalDateTime ultimaAtualizacaoPrecos;
 
     private LocalDate dataLancamento;
 

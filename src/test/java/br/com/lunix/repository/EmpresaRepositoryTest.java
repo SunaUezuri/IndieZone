@@ -1,7 +1,6 @@
-package br.com.lunix;
+package br.com.lunix.repository;
 
 import br.com.lunix.model.entities.Empresa;
-import br.com.lunix.repository.EmpresaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

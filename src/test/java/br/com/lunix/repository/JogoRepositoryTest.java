@@ -1,12 +1,10 @@
-package br.com.lunix;
+package br.com.lunix.repository;
 
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.PrecoPlataforma;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
-import br.com.lunix.repository.EmpresaRepository;
-import br.com.lunix.repository.JogoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

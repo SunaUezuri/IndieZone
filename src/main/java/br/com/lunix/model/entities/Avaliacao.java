@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(collection = "avaliacoes")
 @Getter @Setter
@@ -29,5 +29,5 @@ public class Avaliacao {
 
     private String comentario;
 
-    private LocalDate dataCriacao = LocalDate.now();
+    private LocalDateTime dataCriacao = LocalDateTime.now();
 }

@@ -1,8 +1,7 @@
-package br.com.lunix;
+package br.com.lunix.repository;
 
 import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.Role;
-import br.com.lunix.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
