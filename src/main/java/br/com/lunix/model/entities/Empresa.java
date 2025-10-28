@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document(collection = "empresas")
 @Getter @Setter
 @NoArgsConstructor
@@ -23,4 +25,6 @@ public class Empresa {
     private String paisOrigem;
 
     private String urlLogo;
+
+    private LocalDateTime dataCriacao = LocalDateTime.now();
 }

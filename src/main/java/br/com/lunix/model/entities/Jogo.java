@@ -50,5 +50,7 @@ public class Jogo {
 
     private LocalDate dataLancamento;
 
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
 
 }
