@@ -19,12 +19,14 @@ public class RawgApiService {
     private static final Logger log = LoggerFactory.getLogger(RawgApiService.class);
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private final String apiKey;
+    private final String apiBaseUrl;
 
-    @Value("${rawg.api.key}")
-    private String apiKey;
-
-    @Value("${rawg.api.baseurl}")
-    private String apiBaseUrl;
+    public RawgApiService(@Value("${rawg.api.key}") String apiKey,
+                          @Value("${rawg.api.baseurl}") String apiBaseUrl) {
+        this.apiKey = apiKey;
+        this.apiBaseUrl = apiBaseUrl;
+    }
 
     public List<RawgGameDto> buscarJogos(String termoBusca, int limite) {
         log.info("Buscando jogos na RAWG com o termo '{}'", termoBusca);
@@ -35,6 +37,7 @@ public class RawgApiService {
                 .queryParam("key", apiKey)
                 .queryParam("search", termoBusca)
                 .queryParam("page_size", limite)
+                .encode()
                 .toUriString();
 
         try {
