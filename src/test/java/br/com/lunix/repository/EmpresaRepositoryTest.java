@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataMongoTest
+@TestPropertySource(properties = "mongock.enabled=false")
 public class EmpresaRepositoryTest {
 
     @Autowired

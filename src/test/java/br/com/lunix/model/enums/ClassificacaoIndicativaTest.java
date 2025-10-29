@@ -2,9 +2,11 @@ package br.com.lunix.model.enums;
 
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@TestPropertySource(properties = "mongock.enabled=false")
 public class ClassificacaoIndicativaTest {
 
     @Test
