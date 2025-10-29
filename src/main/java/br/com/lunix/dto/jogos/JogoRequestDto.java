@@ -10,6 +10,12 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+/*
+   DTO utilizado para realizar o cadastro de jogos.
+
+   @NotBlank, @NotNull e @NotEmpty - Garante que os campos não estejam vazios.
+   @PastOrPresentDate - Garante que uma data futura não seja inserida.
+*/
 public record JogoRequestDto(
         @NotBlank(message = "O título não pode estar vazio")
         String titulo,

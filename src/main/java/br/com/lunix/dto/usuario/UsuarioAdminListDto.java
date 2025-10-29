@@ -4,6 +4,10 @@ import br.com.lunix.model.enums.Role;
 
 import java.util.Set;
 
+/*
+    DTO utilizado para exibir os usuários da aplicação
+    para o ADMIN conseguir ter controle.
+*/
 public record UsuarioAdminListDto(
         String id,
         String email,

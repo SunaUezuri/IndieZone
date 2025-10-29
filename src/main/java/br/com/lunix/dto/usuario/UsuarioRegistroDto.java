@@ -6,6 +6,16 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/*
+   DTO utilizado para o cadastro de usuários
+   na aplicação.
+
+   @PasswordsMatch - Garante que o campo de senha e confirmação de senha sejam iguais
+   @NotBlank - Indica que o campo não deve estar vazio.
+   @Email - Define o formato que deve ser utilizado no email.
+   @UniqueEmail - Garante que o email já não esteja registrado no banco.
+   @Size - Define o tamanho mínimo a se ter em um campo.
+*/
 @PasswordsMatch
 public record UsuarioRegistroDto(
         @NotBlank(message = "O nome é obrigatório.")

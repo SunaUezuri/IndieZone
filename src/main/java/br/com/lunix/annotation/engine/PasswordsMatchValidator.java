@@ -10,7 +10,7 @@ import jakarta.validation.ConstraintValidatorContext;
     confirmacaoSenha tem valores iguais.
 
     Implementa a interface **ConstraintValidator** para criar
-    o método de validação utilizando PasswordsMatch.
+    o método de validação utilizando o @PasswordsMatch.
 */
 public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMatch, UsuarioRegistroDto> {
 

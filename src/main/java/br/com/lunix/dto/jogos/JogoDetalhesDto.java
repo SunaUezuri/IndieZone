@@ -5,6 +5,7 @@ import br.com.lunix.model.entities.Jogo;
 
 import java.util.List;
 
+// Record para exibir os detalhes sobre um jogo.
 public record JogoDetalhesDto(
         Jogo jogo,
         List<AvaliacaoResponseDto> avaliacaoAdmin,

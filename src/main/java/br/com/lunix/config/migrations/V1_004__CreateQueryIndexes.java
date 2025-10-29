@@ -8,9 +8,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
 
+/*
+    Classe de migração para criar indices de query
+    para maior perfomance de pesquisas.
+*/
 @ChangeUnit(id = "create-query-indexes", order = "004", author = "lunix-dev")
 public class V1_004__CreateQueryIndexes {
 
+    /*
+        Método de execução que pega as coleções alvo
+        e gera indices para cada parâmetro preciso.
+    */
     @Execution
     public void createPerfomanceIndexes(MongoTemplate template) {
         System.out.println("MONGOCK[004]: Criando índices de perfomance...");
@@ -24,6 +32,10 @@ public class V1_004__CreateQueryIndexes {
         template.indexOps("empresas").createIndex(new Index().on("nome", Sort.Direction.ASC));
     }
 
+    /*
+        Método de rollback para em caso de erro na
+        execução sejam deletados os indices.
+    */
     @RollbackExecution
     public void rollback(MongoTemplate template) {
         template.indexOps("jogos").dropIndex("titulo_text");

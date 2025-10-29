@@ -7,6 +7,12 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
 
+/*
+    DTO utilizado para atualização de usuários.
+
+    @NotBlack e @NotNull - Anotações que garantem que o campo
+    não esteja vazio.
+*/
 public record UsuarioUpdateDto(
         @NotBlank(message = "O nome não pode ser vazio")
         String nome,

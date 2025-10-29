@@ -2,6 +2,12 @@ package br.com.lunix.dto.empresa;
 
 import jakarta.validation.constraints.NotBlank;
 
+/*
+   DTO utilizado para requisição no cadastro
+   de uma empresa.
+
+   @NotBlank - Garante que o campo não esteja vazio.
+*/
 public record EmpresaRequestDto(
         @NotBlank(message = "O nome da empresa não pode ser vazio")
         String nome,
