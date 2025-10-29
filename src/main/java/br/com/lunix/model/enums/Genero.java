@@ -1,5 +1,9 @@
 package br.com.lunix.model.enums;
 
+/*
+    Enum com todos os gêneros de jogos que podem ser
+    utilizados na aplicação
+*/
 public enum Genero {
     ACAO,
     AVENTURA,

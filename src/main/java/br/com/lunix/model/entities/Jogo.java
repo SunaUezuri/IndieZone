@@ -15,6 +15,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+    Entidade do banco de dados que receberá dados dos jogos
+    que estarãp presentes na aplicação.
+
+    @Document - Define a classe como uma entidade no MongoDB.
+    @Getter @Setter - Cria todos os getters e setters da classe.
+    @NoArgsConstructor @AllArgsConstructor - Anotações que criam
+    automaticamente os construtores pricipais da classe.
+*/
 @Document(collection = "jogos")
 @Getter @Setter
 @NoArgsConstructor

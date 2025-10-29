@@ -9,6 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/*
+    Anotação utilizada para definir que uma data de lançamento de jogo
+    não pode ser em uma data futura.
+*/
 @Constraint(validatedBy = PastOrPresentDateValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)

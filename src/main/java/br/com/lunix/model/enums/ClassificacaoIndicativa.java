@@ -3,6 +3,14 @@ package br.com.lunix.model.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/*
+    Enum com dados de classificação indicativa para o cadastro
+    dos jogos na aplicação.
+
+    @param selo - Símbolo referente a classificação indicativa específica.
+    @param descricao - Descrição do que significa aquele selo.
+    @param corHex - Código Hex de cor para utilização simplificada no front-end
+*/
 @Getter
 @AllArgsConstructor
 public enum ClassificacaoIndicativa {

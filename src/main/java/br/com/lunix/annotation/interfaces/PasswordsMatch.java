@@ -9,6 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/*
+    Anotação criada para verificar se os campos de 'senha' e 'confirme a senha'
+    tem exatamente o mesmo valor.
+*/
 @Constraint(validatedBy = PasswordsMatchValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

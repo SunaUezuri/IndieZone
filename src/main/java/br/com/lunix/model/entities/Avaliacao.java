@@ -10,6 +10,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+
+/*
+    Entidade do banco de dados que receberá as avaliações
+    feitas de um usuário a um jogo
+
+    @Document - Define a classe como uma entidade no MongoDB.
+    @Getter @Setter - Cria todos os getters e setters da classe.
+    @NoArgsConstructor @AllArgsConstructor - Anotações que criam
+    automaticamente os construtores pricipais da classe.
+*/
 @Document(collection = "avaliacoes")
 @Getter @Setter
 @NoArgsConstructor
