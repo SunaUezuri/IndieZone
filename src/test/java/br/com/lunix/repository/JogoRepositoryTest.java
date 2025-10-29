@@ -18,6 +18,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+    Classe de teste para garantir o funcionamento
+    dos métodos do repositório de Jogo
+*/
 @DataMongoTest
 @TestPropertySource(properties = "mongock.enabled=false")
 public class JogoRepositoryTest {
@@ -48,6 +52,10 @@ public class JogoRepositoryTest {
         empresaRepository.save(devTest);
     }
 
+    /*
+        Garante que um jogo seja salvo com seus relacionamentos
+        e objetos embutidos
+    */
     @Test
     public void deveSalvarEBuscarJogoComRelacionamentosEObjetosEmbutidos() {
         Jogo novoJogo = new Jogo();
@@ -75,6 +83,10 @@ public class JogoRepositoryTest {
         assertThat(jogoEncontrado.getPrecos().get(0).getPrecoAtual()).isEqualTo(49.90);
     }
 
+    /*
+        Teste para garantir que um jogo seja encontrado
+        comum título semelhante sem incluir case.
+    */
     @Test
     public void deveEncontrarJogoPeloTituloParcialIgnorandoCase() {
         jogo.setTitulo("Meu Jogo Fantástico");
@@ -87,6 +99,10 @@ public class JogoRepositoryTest {
 
     }
 
+    /*
+        Teste para garantir que são encontrados jogos
+        a partir dos gêneros inseridos.
+    */
     @Test
     public void deveEncontrarJogosPorGenero() {
         Jogo jogoIndieAventura = new Jogo();
@@ -113,6 +129,10 @@ public class JogoRepositoryTest {
         assertThat(jogosAventura.get(0).getTitulo()).isEqualTo("Aventura Indie");
     }
 
+    /*
+        Teste para garantir que encontre todos os jogos
+        com a classificação indicativa inserida.
+    */
     @Test
     public void deveEncontrarJogosPorClassificacaoIndicativa() {
         Jogo jogoLivre1 = new Jogo();
@@ -136,6 +156,10 @@ public class JogoRepositoryTest {
         assertThat(jogosLivres).extracting(Jogo::getTitulo).contains("Fazendinha Feliz", "Corrida de Kart");
     }
 
+    /*
+        Teste para garantir que o método encontre
+        todos os jogos de uma empresa específica.
+    */
     @Test
     public void deveEncontrarJogosPorEmpresa() {
         Jogo jogo1 = new Jogo();
@@ -153,6 +177,10 @@ public class JogoRepositoryTest {
         assertThat(resultado).extracting(Jogo::getTitulo).contains("Jogo 1", "Jogo 2");
     }
 
+    /*
+        Teste para garantir que o método encontre
+        jogos de um dev específico.
+    */
     @Test
     public void deveEncontrarJogosPorDev() {
         Usuario usuario = new Usuario();
@@ -175,8 +203,10 @@ public class JogoRepositoryTest {
         assertThat(resultado).extracting(Jogo::getTitulo).contains("Jogo 1", "Jogo 2");
     }
 
-
-
+    /*
+        Teste para garantir que encontre os 10 jogos
+        com maior nota média do banco.
+    */
     @Test
     public void deveRetornarTop10JogosOrdenadosPorNotaMedia() {
         for (int i = 0; i <= 10; i++) {
@@ -192,6 +222,10 @@ public class JogoRepositoryTest {
         assertThat(top10.get(9).getTitulo()).isEqualTo("Jogo Nota 1");
     }
 
+    /*
+        Teste para garantir que sejam encontrados
+        os 10 jogos recentemente lançados.
+    */
     @Test
     public void deveRetornarTop10JogosOrdenadosPorDataLancamento() {
         for (int i = 1; i <= 11; i++) {

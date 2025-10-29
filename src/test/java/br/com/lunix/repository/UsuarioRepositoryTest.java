@@ -13,6 +13,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+    Classe de teste que garante o funcionamento
+    do repositório de Usuario.
+*/
 @DataMongoTest
 @TestPropertySource(properties = "mongock.enabled=false")
 public class UsuarioRepositoryTest {
@@ -28,6 +32,10 @@ public class UsuarioRepositoryTest {
         repository.deleteAll();
     }
 
+    /*
+        Teste para garantir que um usuário está corretamente sendo inserido
+        e que é possível o encontrar por Email.
+    */
     @Test
     public void deveSalvarEBuscarUsuarioPorEmailComSucesso() {
         // Arrange

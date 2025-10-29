@@ -64,7 +64,8 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     /*
         Busca os 10 jogos recentemente inseridos
 
-        return: Retorna uma lista com os 10 jogos que foram inseridos recentemente na aplicação
+        return: Retorna uma lista com os 10 jogos que foram lançados
+        recentemente.
     */
     List<Jogo> findTop10ByOrderByDataLancamentoDesc();
 }

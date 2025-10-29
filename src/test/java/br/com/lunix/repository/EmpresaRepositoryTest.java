@@ -13,6 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
+/*
+    Classe de testes para garantir o funcionamento
+    dos métodos do repositório de Empresa
+*/
 @DataMongoTest
 @TestPropertySource(properties = "mongock.enabled=false")
 public class EmpresaRepositoryTest {
@@ -31,6 +35,10 @@ public class EmpresaRepositoryTest {
         empresa = new Empresa();
     }
 
+    /*
+        Garante que uma empresa consegue ser registrada
+        e bucada pelo seu ID.
+    */
     @Test
     public void deveSalvarEBuscarEmpresaPorIdComSucesso() {
         empresa.setNome("Team Cherry");
@@ -46,6 +54,10 @@ public class EmpresaRepositoryTest {
         assertThat(empresaOptional.get().getDescricao()).isEqualTo("Desenvolvedores de Hollow Knight");
     }
 
+    /*
+        Garante que uma empresa possa ser buscada sem considerar
+        os cases do texto inserido.
+    */
     @Test
     public void deveEncontrarEmpresaPeloNomeIgnorandoCase() {
         empresa.setNome("Team Cherry");
@@ -62,6 +74,10 @@ public class EmpresaRepositoryTest {
         assertThat(buscadaPorMaiusculas.get().getNome()).isEqualTo("Team Cherry");
     }
 
+    /*
+        Teste que garante que o método encontre
+        empresas a partir de um país ignorando cases.
+    */
     @Test
     public void deveBuscarEmpresasPorPaisIgnorandoCase() {
         Empresa empresa1 = new Empresa();
@@ -86,6 +102,10 @@ public class EmpresaRepositoryTest {
                 .containsExactlyInAnyOrder("Empresa BR1", "Empresa BR2");
     }
 
+    /*
+        Teste para garantir que não encontre
+        uma empresa inexistente a partirdo nome.
+    */
     @Test
     public void naoDeveEncontrarEmpresaComNomeInexistente() {
         empresa.setNome("Inexistente");

@@ -6,6 +6,10 @@ import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+    Classe de teste para garantir que os valores
+    definidos nos parâmetros do ENUM esteja realmente válidos
+*/
 @TestPropertySource(properties = "mongock.enabled=false")
 public class ClassificacaoIndicativaTest {
 

@@ -14,6 +14,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+    Classe de testes para garantir que os métodos
+    de avaliação estejam funcionando corretamente.
+*/
 @DataMongoTest
 @TestPropertySource(properties = "mongock.enabled=false")
 public class AvaliacaoRepositoryTest {
@@ -29,6 +33,10 @@ public class AvaliacaoRepositoryTest {
     private Jogo jogoTeste;
     private Avaliacao avaliacao;
 
+    /*
+        Setando informações qie serão utilizadas nos
+        testes.
+    */
     @BeforeEach
     public void setup() {
 
@@ -49,6 +57,10 @@ public class AvaliacaoRepositoryTest {
         jogoRepository.save(jogoTeste);
     }
 
+    /*
+        Teste para garantir que uma avaliação está
+        sendo salva corretamente.
+    */
     @Test
     public void deveSalvarAvaliacaoComReferenciasCorretas() {
         avaliacao.setUsuario(usuarioTeste);
@@ -64,6 +76,10 @@ public class AvaliacaoRepositoryTest {
         assertThat(avaliacaoSalva.getNota()).isEqualTo(9);
     }
 
+    /*
+        Teste garantindo que vá encontrar todas as
+        avaliações registradas.
+    */
     @Test
     public void deveEncontrarTodasAvaliacoesDeUmJogo() {
         Avaliacao avaliacao1 = new Avaliacao();
@@ -84,6 +100,11 @@ public class AvaliacaoRepositoryTest {
         assertThat(avaliacoesDoJogo.get(0).getNota()).isEqualTo(10);
     }
 
+    /*
+        Teste para garantir que o método
+        encontre todas as avaliações de
+        um usuário.
+    */
     @Test
     public void deveEncontrarTodasAvaliacoesDeUmUsuario() {
         Usuario outroUsuario = new Usuario();
@@ -121,6 +142,10 @@ public class AvaliacaoRepositoryTest {
         assertThat(avaliacoesDoUsuarioTeste.get(0).getNota()).isEqualTo(10);
     }
 
+    /*
+        Teste para verificar se uma avaliação
+        existe.
+    */
     @Test
     public void deveVerificarCorretamenteSeAvaliacaoExiste() {
         avaliacao.setUsuario(usuarioTeste);

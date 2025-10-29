@@ -18,6 +18,11 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+/*
+    Classe de testes para garantir que a service
+    do RAWG consiga puxar os dados corretamente
+    da API.
+*/
 @RestClientTest(RawgApiService.class)
 @TestPropertySource(properties = {
         "rawg.api.baseurl=https://api.rawg.io",
@@ -37,6 +42,10 @@ class RawgApiServiceTest {
         mockServer.reset();
     }
 
+    /*
+        Teste para garantir que ele vá buscar jogos utilizando
+        o título com sucesso.
+    */
     @Test
     void deveBuscarJogosERetornarListaDeDTOsComSucesso() throws Exception {
         // Cenário (Arrange)
