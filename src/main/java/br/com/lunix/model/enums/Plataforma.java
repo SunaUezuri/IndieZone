@@ -10,5 +10,12 @@ public enum Plataforma {
     MACOS,
     LINUX,
     ANDROID,
-    IOS
+    IOS,
+    NINTENDO_3DS,
+    NINTENDO_DS,
+    XBOX360,
+    PLAYSTATION_1,
+    PLAYSTATION_2,
+    PLAYSTATION_3,
+    OUTROS
 }

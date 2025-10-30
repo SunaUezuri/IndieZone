@@ -10,6 +10,7 @@ public enum Genero {
     RPG,
     ESTRATEGIA,
     SIMULACAO,
+    SHOOTER,
     ESPORTES,
     CORRIDA,
     PUZZLE,
@@ -21,5 +22,6 @@ public enum Genero {
     RITMO,
     SURVIVAL,
     BATTLE_ROYALE,
-    TERROR
+    TERROR,
+    OUTROS
 }
