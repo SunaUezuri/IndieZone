@@ -5,6 +5,7 @@ import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -68,4 +69,10 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
         recentemente.
     */
     List<Jogo> findTop10ByOrderByDataLancamentoDesc();
+
+    /**
+     * Busca todos os jogos que contêm uma plataforma específica em sua lista.
+     * Essencial para a funcionalidade de filtro por plataforma.
+     */
+    List<Jogo> findByPlataformas(Plataforma plataforma);
 }

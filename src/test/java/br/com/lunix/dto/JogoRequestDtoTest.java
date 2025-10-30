@@ -3,6 +3,7 @@ package br.com.lunix.dto;
 import br.com.lunix.dto.jogos.JogoRequestDto;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class JogoRequestDtoTest {
                 "Jogo Válido", "Descrição OK", null,
                 LocalDate.now().minusYears(1),
                 ClassificacaoIndicativa.LIVRE,
-                List.of(Genero.AVENTURA)
+                List.of(Genero.AVENTURA),
+                List.of(Plataforma.PC)
         );
 
         // Aplica o validador no dto de exemplo
@@ -58,9 +60,10 @@ public class JogoRequestDtoTest {
         // Cria um exemplo de dto
         var dto = new JogoRequestDto(
                 "Jogo Válido", "Descrição OK", null,
-                LocalDate.now(), // Data de hoje
+                LocalDate.now().minusYears(1),
                 ClassificacaoIndicativa.LIVRE,
-                List.of(Genero.AVENTURA)
+                List.of(Genero.AVENTURA),
+                List.of(Plataforma.PC)
         );
 
         // Aplica o validador
@@ -80,7 +83,8 @@ public class JogoRequestDtoTest {
                 "Jogo Inválido", "Descrição OK", null,
                 LocalDate.now().plusDays(1), // Data no futuro
                 ClassificacaoIndicativa.LIVRE,
-                List.of(Genero.AVENTURA)
+                List.of(Genero.AVENTURA),
+                List.of(Plataforma.PC)
         );
 
         Set<ConstraintViolation<JogoRequestDto>> violations = validator.validate(dto);
@@ -106,7 +110,8 @@ public class JogoRequestDtoTest {
                 "Jogo Inválido", "Descrição OK", null,
                 null, // Data nula
                 ClassificacaoIndicativa.LIVRE,
-                List.of(Genero.AVENTURA)
+                List.of(Genero.AVENTURA),
+                List.of(Plataforma.PC)
         );
 
         Set<ConstraintViolation<JogoRequestDto>> violations = validator.validate(dto);

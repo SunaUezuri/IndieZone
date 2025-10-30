@@ -3,6 +3,7 @@ package br.com.lunix.dto.jogos;
 import br.com.lunix.annotation.interfaces.PastOrPresentDate;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,8 @@ public record JogoRequestDto(
         @NotNull(message = "A classificacao indicativa é obrigatória")
         ClassificacaoIndicativa classificacao,
         @NotEmpty(message = "Um jogo deve ter ao menos um Genero")
-        List<Genero> generos
+        List<Genero> generos,
+        @NotEmpty(message = "Selecione ao menos uma plataforma.")
+        List<Plataforma> plataformas
 ) {
 }

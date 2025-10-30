@@ -6,6 +6,7 @@ import br.com.lunix.model.entities.PrecoPlataforma;
 import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,6 +240,32 @@ public class JogoRepositoryTest {
         assertThat(recentes).hasSize(10);
         assertThat(recentes.get(0).getTitulo()).isEqualTo("Jogo Dia 11");
         assertThat(recentes.get(9).getTitulo()).isEqualTo("Jogo Dia 2");
+    }
+
+    @Test
+    public void deveEncontrarJogosPorPlataforma() {
+        // Cenário
+        Jogo jogoPc = new Jogo();
+        jogoPc.setTitulo("Jogo de PC");
+        jogoPc.setPlataformas(List.of(Plataforma.PC, Plataforma.LINUX));
+        repository.save(jogoPc);
+
+        Jogo jogoConsole = new Jogo();
+        jogoConsole.setTitulo("Jogo de Console");
+        jogoConsole.setPlataformas(List.of(Plataforma.PLAYSTATION_5, Plataforma.XBOX_SERIES));
+        repository.save(jogoConsole);
+
+        Jogo jogoMulti = new Jogo();
+        jogoMulti.setTitulo("Jogo Multiplataforma");
+        jogoMulti.setPlataformas(List.of(Plataforma.PC, Plataforma.PLAYSTATION_5));
+        repository.save(jogoMulti);
+
+        // Ação
+        List<Jogo> jogosDePC = repository.findByPlataformas(Plataforma.PC);
+
+        // Verificação
+        assertThat(jogosDePC).hasSize(2);
+        assertThat(jogosDePC).extracting(Jogo::getTitulo).contains("Jogo de PC", "Jogo Multiplataforma");
     }
 
 }

@@ -2,6 +2,7 @@ package br.com.lunix.model.entities;
 
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,8 @@ public class Jogo {
     private List<Genero> generos = new ArrayList<>();
 
     private List<PrecoPlataforma> precos = new ArrayList<>();
+
+    private List<Plataforma> plataformas = new ArrayList<>();
 
     private double notaMedia = 0.0;
 

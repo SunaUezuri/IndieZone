@@ -4,6 +4,7 @@ import br.com.lunix.model.entities.Avaliacao;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
@@ -50,6 +51,7 @@ public class V1_003__SeedGamesAndReviews {
         undertale.setDataLancamento(LocalDate.of(2015, 9, 15));
         undertale.setClassificacao(ClassificacaoIndicativa.DOZE);
         undertale.setGeneros(List.of(Genero.RPG, Genero.AVENTURA));
+        undertale.setPlataformas(List.of(Plataforma.PC, Plataforma.PLAYSTATION_4, Plataforma.NINTENDO_SWITCH));
         template.save(undertale);
 
         Jogo hollowKnight = new Jogo();
@@ -59,6 +61,7 @@ public class V1_003__SeedGamesAndReviews {
         hollowKnight.setDataLancamento(LocalDate.of(2017, 2, 24));
         hollowKnight.setClassificacao(ClassificacaoIndicativa.DEZ);
         hollowKnight.setGeneros(List.of(Genero.METROIDVANIA, Genero.AVENTURA));
+        hollowKnight.setPlataformas(List.of(Plataforma.PC, Plataforma.PLAYSTATION_4, Plataforma.XBOX_ONE, Plataforma.NINTENDO_SWITCH, Plataforma.MACOS, Plataforma.LINUX));
         template.save(hollowKnight);
 
         Avaliacao avaliacaoAdmin = new Avaliacao();
