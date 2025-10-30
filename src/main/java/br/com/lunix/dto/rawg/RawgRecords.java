@@ -14,24 +14,39 @@ public class RawgRecords {
 
     // Record que recebe o gênero do jogo
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record RawgGenreDto(String name) {}
+    public record RawgGenreDto(int id, String name, String slug) {}
 
     // Record que recebe o nome do desenvolvedor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record RawgDeveloperDto(String name) {}
+    public record RawgDeveloperDto(int id, String name, String slug) {}
+
+    // Mapeia o objeto "platform" interno.
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgPlatformDto(int id, String name, String slug) {}
+
+    // Mapeia a entrada principal na lista "platforms", que contém o objeto aninhado.
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgPlatformEntryDto(@JsonProperty("platform") RawgPlatformDto platform) {}
 
     // Record final que recebe todos os dados necessários
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record RawgGameDto(
+            int id,
+            String slug,
             @JsonProperty("name") String name,
-            @JsonProperty("description_raw") String description,
             @JsonProperty("released") LocalDate released,
             @JsonProperty("background_image") String backgroundImage,
+            @JsonProperty("platforms") List<RawgPlatformEntryDto> platforms,
             @JsonProperty("genres") List<RawgGenreDto> genres,
-            @JsonProperty("developers") List<RawgDeveloperDto> developers
+            @JsonProperty("developers") List<RawgDeveloperDto> developers,
+            @JsonProperty("description_raw") String description
     ) {}
 
     // Record que recebe a lista de jogos encontrados
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record RawgApiResponseDto(List<RawgGameDto> results) {}
+    public record RawgApiResponseDto(
+            int count,
+            String next,
+            String previous,
+            List<RawgGameDto> results
+    ) {}
 }

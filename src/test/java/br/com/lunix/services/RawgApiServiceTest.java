@@ -47,7 +47,7 @@ class RawgApiServiceTest {
         o título com sucesso.
     */
     @Test
-    void deveBuscarJogosERetornarListaDeDTOsComSucesso() throws Exception {
+    public void deveBuscarJogosERetornarListaDeDTOsComSucesso() throws Exception {
         // Cenário (Arrange)
         String termoBusca = "hollow knight";
         int limite = 1;
@@ -66,12 +66,16 @@ class RawgApiServiceTest {
                     "count": 1,
                     "results": [
                         {
+                            "id": 12345,
+                            "slug": "hollow-knight",
                             "name": "Hollow Knight",
-                            "description_raw": "Explore a vast ruined kingdom...",
                             "released": "2017-02-24",
                             "background_image": "https://example.com/hollow_knight.jpg",
-                            "genres": [{"name": "Metroidvania"}],
-                            "developers": [{"name": "Team Cherry"}]
+                            "platforms": [
+                                { "platform": { "id": 4, "name": "PC", "slug": "pc" } }
+                            ],
+                            "genres": [{"id": 51, "name": "Indie", "slug": "indie"}],
+                            "developers": [{"id": 987, "name": "Team Cherry", "slug": "team-cherry"}]
                         }
                     ]
                 }
@@ -83,11 +87,12 @@ class RawgApiServiceTest {
 
         List<RawgGameDto> resultado = rawgApiService.buscarJogos(termoBusca, limite);
 
-        mockServer.verify(); // Garante que a chamada esperada realmente aconteceu.
-
+        mockServer.verify();
         assertThat(resultado).isNotNull().hasSize(1);
         RawgGameDto jogoRetornado = resultado.get(0);
         assertThat(jogoRetornado.name()).isEqualTo("Hollow Knight");
         assertThat(jogoRetornado.backgroundImage()).isEqualTo("https://example.com/hollow_knight.jpg");
+        assertThat(jogoRetornado.platforms()).hasSize(1);
+        assertThat(jogoRetornado.platforms().get(0).platform().name()).isEqualTo("PC");
     }
 }
