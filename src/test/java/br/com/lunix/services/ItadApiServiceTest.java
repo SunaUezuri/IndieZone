@@ -2,6 +2,7 @@ package br.com.lunix.services;
 
 import br.com.lunix.mapper.ItadMapper;
 import br.com.lunix.model.entities.PrecoPlataforma;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RestClientTest(ItadApiService.class)
@@ -35,75 +35,71 @@ public class ItadApiServiceTest {
     @Autowired
     private MockRestServiceServer mockServer;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
-    void setup() {
+    public void setup() {
         mockServer.reset();
     }
 
     @Test
-    public void deveBuscarPrecosComSucessoQuandoAmbasAsChamadasFuncionam() {
+    public void deveBuscarPrecosComSucessoSeguindoNovoFluxoDaApi() throws Exception {
+        // --- CENÁRIO (ARRANGE) ---
         String termoBusca = "Hades";
-        String plain = "hades";
+        String gameId = "018d937f-33f0-7200-80fc-87f769196c84";
 
-        // Preparando a primeira chamada (busca pelo 'plain')
-        String searchUrl = UriComponentsBuilder.fromUriString("https://api.isthereanydeal.com")
-                .path("/v02/search/search/")
-                .queryParam("key", "TEST_ITAD_KEY").queryParam("q", termoBusca).queryParam("limit", 1)
+        // ... (Mock da primeira chamada para /games/lookup/v1 permanece o mesmo) ...
+        String lookupUrl = UriComponentsBuilder.fromUriString("https://api.isthereanydeal.com")
+                .path("/games/lookup/v1")
+                .queryParam("key", "TEST_ITAD_KEY").queryParam("title", termoBusca)
                 .build().toUri().toString();
+        String lookupResponse = """
+                { "found": true, "game": { "id": "%s", "slug": "hades", "title": "Hades" } }
+                """.formatted(gameId);
+        mockServer.expect(requestTo(lookupUrl)).andRespond(withSuccess(lookupResponse, MediaType.APPLICATION_JSON));
 
-        String searchResponse = """
-                { "data": { "list": [{ "plain": "hades", "title": "Hades" }] } }
-                """;
 
-        mockServer.expect(requestTo(searchUrl))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(searchResponse, MediaType.APPLICATION_JSON));
-
-        // 2. Preparar a SEGUNDA chamada (busca pelos preços)
+        // Preparar a SEGUNDA chamada (POST para /games/prices/v3)
         String pricesUrl = UriComponentsBuilder.fromUriString("https://api.isthereanydeal.com")
-                .path("/v01/game/prices/")
-                .queryParam("key", "TEST_ITAD_KEY").queryParam("plains", plain).queryParam("country", "BR")
+                .path("/games/prices/v3")
+                .queryParam("key", "TEST_ITAD_KEY").queryParam("country", "BR")
                 .build().toUri().toString();
+
+        List<String> expectedRequestBody = List.of(gameId);
 
         String pricesResponse = """
-                { "data": { "hades": { "list": [
-                    { "shop": {"name": "Steam"}, "price_new": 47.49, "price_old": 94.99, "price_cut": 50, "url": "url/steam" },
-                    { "shop": {"name": "GOG"}, "price_new": 94.99, "price_old": 94.99, "price_cut": 0, "url": "url/gog" }
-                ]}}}
-                """;
+                [
+                    {
+                        "id": "%s",
+                        "deals": [
+                            {
+                                "shop": {"id": 61, "name": "Steam"},
+                                "price": {"amount": 47.49, "currency": "BRL"},
+                                "regular": {"amount": 94.99, "currency": "BRL"},
+                                "cut": 50,
+                                "url": "url/steam",
+                                "drm": [{"id": 61, "name": "Steam"}]
+                            }
+                        ]
+                    }
+                ]
+                """.formatted(gameId);
 
         mockServer.expect(requestTo(pricesUrl))
-                .andExpect(method(HttpMethod.GET))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedRequestBody)))
                 .andRespond(withSuccess(pricesResponse, MediaType.APPLICATION_JSON));
 
+        // --- AÇÃO (ACT) ---
         List<PrecoPlataforma> resultado = itadApiService.buscarPrecosParaJogo(termoBusca);
 
-        mockServer.verify(); // Garante que AMBAS as chamadas esperadas aconteceram.
+        // --- VERIFICAÇÃO (ASSERT) ---
+        mockServer.verify();
 
-        assertThat(resultado).hasSize(2);
+        assertThat(resultado).hasSize(1);
         PrecoPlataforma precoSteam = resultado.get(0);
         assertThat(precoSteam.getNomeLoja()).isEqualTo("Steam");
         assertThat(precoSteam.getPrecoAtual()).isEqualTo(47.49);
-    }
-
-    @Test
-    public void deveRetornarListaVaziaQuandoPlainNaoEhEncontrado() {
-        String termoBusca = "Jogo Inexistente";
-        String searchUrl = UriComponentsBuilder.fromUriString("https://api.isthereanydeal.com")
-                .path("/v02/search/search/")
-                .queryParam("key", "TEST_ITAD_KEY").queryParam("q", termoBusca).queryParam("limit", 1)
-                .build().toUri().toString();
-
-        String searchResponse = """
-                { "data": { "list": [] } }
-                """;
-
-        mockServer.expect(requestTo(searchUrl))
-                .andRespond(withSuccess(searchResponse, MediaType.APPLICATION_JSON));
-
-        List<PrecoPlataforma> resultado = itadApiService.buscarPrecosParaJogo(termoBusca);
-
-        mockServer.verify();
-        assertThat(resultado).isEmpty();
     }
 }

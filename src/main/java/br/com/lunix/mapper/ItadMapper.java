@@ -1,23 +1,26 @@
 package br.com.lunix.mapper;
 
-import br.com.lunix.dto.itad.ItadRecords.ItadPriceEntryDto;
+import br.com.lunix.dto.itad.ItadRecords.ItadDealDto;
 import br.com.lunix.model.entities.PrecoPlataforma;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ItadMapper {
 
-    public PrecoPlataforma toPrecoPlataforma(ItadPriceEntryDto dto) {
+    public PrecoPlataforma toPrecoPlataforma(ItadDealDto dto) {
         if (dto == null) {
             return null;
         }
 
+        double precoAtual = (dto.price() != null) ? dto.price().amount() : 0.0;
+        double precoBase = (dto.regular() != null) ? dto.regular().amount() : precoAtual;
+
         return new PrecoPlataforma(
                 dto.shop().name(),
-                dto.precoAtual(),
-                dto.precoBase(),
-                dto.descontoPercentual(),
-                dto.urlLoja()
+                precoAtual,
+                precoBase,
+                dto.priceCut(),
+                dto.url()
         );
     }
 }
