@@ -36,6 +36,7 @@ public class RawgRecords {
             @JsonProperty("name") String name,
             @JsonProperty("released") LocalDate released,
             @JsonProperty("background_image") String backgroundImage,
+            @JsonProperty("esrb_rating") RawgEsrbRatingDto esrbRating,
             @JsonProperty("platforms") List<RawgPlatformEntryDto> platforms,
             @JsonProperty("genres") List<RawgGenreDto> genres,
             @JsonProperty("developers") List<RawgDeveloperDto> developers,
@@ -49,4 +50,8 @@ public class RawgRecords {
             String previous,
             List<RawgGameDto> results
     ) {}
+
+    // Record para mapear a classificação indicativa dos jogos
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgEsrbRatingDto(int id, String name, String slug) {}
 }

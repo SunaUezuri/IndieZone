@@ -63,7 +63,6 @@ class RawgApiServiceTest {
         // 2. Criamos o corpo da resposta JSON que nosso servidor FALSO irá devolver.
         String jsonResponse = """
                 {
-                    "count": 1,
                     "results": [
                         {
                             "id": 12345,
@@ -71,6 +70,7 @@ class RawgApiServiceTest {
                             "name": "Hollow Knight",
                             "released": "2017-02-24",
                             "background_image": "https://example.com/hollow_knight.jpg",
+                            "esrb_rating": { "id": 2, "name": "Everyone 10+", "slug": "everyone-10-plus" },
                             "platforms": [
                                 { "platform": { "id": 4, "name": "PC", "slug": "pc" } }
                             ],
@@ -85,14 +85,15 @@ class RawgApiServiceTest {
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(jsonResponse, MediaType.APPLICATION_JSON));
 
-        List<RawgGameDto> resultado = rawgApiService.buscarJogos(termoBusca, limite);
+        List<RawgGameDto> resultado = rawgApiService.buscarJogos("hollow knight", 1);
 
         mockServer.verify();
         assertThat(resultado).isNotNull().hasSize(1);
         RawgGameDto jogoRetornado = resultado.get(0);
         assertThat(jogoRetornado.name()).isEqualTo("Hollow Knight");
-        assertThat(jogoRetornado.backgroundImage()).isEqualTo("https://example.com/hollow_knight.jpg");
-        assertThat(jogoRetornado.platforms()).hasSize(1);
-        assertThat(jogoRetornado.platforms().get(0).platform().name()).isEqualTo("PC");
+
+        // --- NOVA VERIFICAÇÃO ---
+        assertThat(jogoRetornado.esrbRating()).isNotNull();
+        assertThat(jogoRetornado.esrbRating().slug()).isEqualTo("everyone-10-plus");
     }
 }

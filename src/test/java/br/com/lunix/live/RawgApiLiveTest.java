@@ -57,6 +57,8 @@ public class RawgApiLiveTest {
         System.out.println("  Data de Lançamento   : " + (jogo.released() != null ? jogo.released().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A"));
         System.out.println("  URL da Capa          : " + jogo.backgroundImage());
         System.out.println("  Descrição            : " + (jogo.description() != null ? jogo.description().substring(0, Math.min(jogo.description().length(), 200)) + "..." : "N/A"));
+        String classificacao = jogo.esrbRating() != null ? jogo.esrbRating().name() : "N/A";
+        System.out.println("  Classificação ESRB   : " + classificacao);
 
         // Gêneros
         String generos = jogo.genres() != null ? jogo.genres().stream().map(g -> g.name()).collect(Collectors.joining(", ")) : "N/A";
