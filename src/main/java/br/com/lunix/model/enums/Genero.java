@@ -19,7 +19,6 @@ public enum Genero {
     SOULS_LIKE,
     METROIDVANIA,
     ROGUE_LIKE,
-    RITMO,
     SURVIVAL,
     BATTLE_ROYALE,
     TERROR,

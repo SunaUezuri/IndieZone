@@ -1,0 +1,122 @@
+package br.com.lunix.mapper;
+
+import br.com.lunix.dto.jogos.JogoMapeadoDto;
+import br.com.lunix.dto.rawg.RawgRecords.*;
+import br.com.lunix.model.entities.Jogo;
+import br.com.lunix.model.enums.ClassificacaoIndicativa;
+import br.com.lunix.model.enums.Genero;
+import br.com.lunix.model.enums.Plataforma;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Component
+public class RawgMapper {
+
+    private static final Logger log = LoggerFactory.getLogger(RawgMapper.class);
+
+    public JogoMapeadoDto toJogoMapeado(RawgGameDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Jogo jogo = new Jogo();
+        jogo.setTitulo(dto.name());
+        jogo.setDescricao(dto.description());
+        jogo.setDataLancamento(dto.released());
+        jogo.setUrlCapa(dto.backgroundImage());
+
+        // Mapeia as listas, traduzindo os valores da API para nossos Enums
+        jogo.setGeneros(toGeneroList(dto.genres()));
+        jogo.setPlataformas(toPlataformaList(dto.platforms()));
+        jogo.setClassificacao(toClassificacaoIndicativa(dto.esrbRating()));
+
+        String nomeDev = extrairNomeDesenvolvedorPrincipal(dto.developers());
+
+        return new JogoMapeadoDto(jogo, nomeDev);
+    }
+
+    private String extrairNomeDesenvolvedorPrincipal(List<RawgDeveloperDto> devDtos) {
+        return Optional.ofNullable(devDtos)
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.get(0).name())
+                .orElse(null);
+    }
+
+    private List<Genero> toGeneroList(List<RawgGenreDto> generoDtos) {
+        if (generoDtos == null) return Collections.emptyList();
+        return generoDtos.stream().map(this::toGenero).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private List<Plataforma> toPlataformaList(List<RawgPlatformEntryDto> plataformaDtos) {
+        if (plataformaDtos == null) return Collections.emptyList();
+        return plataformaDtos.stream().map(entry -> toPlataforma(entry.platform())).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private Genero toGenero(RawgGenreDto dto) {
+        if (dto == null || dto.slug() == null) return null;
+        return switch (dto.slug()) {
+            case "action" -> Genero.ACAO;
+            case "adventure" -> Genero.AVENTURA;
+            case "role-playing-games-rpg" -> Genero.RPG;
+            case "strategy" -> Genero.ESTRATEGIA;
+            case "shooter" -> Genero.SHOOTER;
+            case "simulation" -> Genero.SIMULACAO;
+            case "puzzle" -> Genero.PUZZLE;
+            case "platformer" -> Genero.PLATAFORMA;
+            case "racing" -> Genero.CORRIDA;
+            case "sports" -> Genero.ESPORTES;
+            case "fighting" -> Genero.LUTA;
+            case "horror" -> Genero.TERROR;
+            case "survival" -> Genero.SURVIVAL;
+            default -> {
+                log.warn("Gênero não mapeado da API RAWG, categorizado como OUTROS: slug='{}', name='{}'", dto.slug(), dto.name());
+                yield Genero.OUTROS;
+            }
+        };
+    }
+
+    private Plataforma toPlataforma(RawgPlatformDto dto) {
+        if (dto == null || dto.slug() == null) return null;
+        return switch (dto.slug()) {
+            case "pc" -> Plataforma.PC;
+            case "playstation5" -> Plataforma.PLAYSTATION_5;
+            case "playstation4" -> Plataforma.PLAYSTATION_4;
+            case "playstation3" -> Plataforma.PLAYSTATION_3;
+            case "playstation2" -> Plataforma.PLAYSTATION_2;
+            case "playstation1" -> Plataforma.PLAYSTATION_1;
+            case "xbox-series-x" -> Plataforma.XBOX_SERIES;
+            case "xbox-one" -> Plataforma.XBOX_ONE;
+            case "xbox360" -> Plataforma.XBOX360;
+            case "nintendo-switch" -> Plataforma.NINTENDO_SWITCH;
+            case "nintendo-3ds" -> Plataforma.NINTENDO_3DS;
+            case "nintendo-ds" -> Plataforma.NINTENDO_DS;
+            case "macos" -> Plataforma.MACOS;
+            case "linux" -> Plataforma.LINUX;
+            case "android" -> Plataforma.ANDROID;
+            case "ios" -> Plataforma.IOS;
+            default -> {
+                log.warn("Plataforma não mapeada da API RAWG, categorizada como OUTROS: slug='{}', name='{}'", dto.slug(), dto.name());
+                yield Plataforma.OUTROS;
+            }
+        };
+    }
+
+    private ClassificacaoIndicativa toClassificacaoIndicativa(RawgEsrbRatingDto dto) {
+        if (dto == null || dto.slug() == null) return null;
+        return switch (dto.slug()) {
+            case "everyone" -> ClassificacaoIndicativa.LIVRE;
+            case "everyone-10-plus" -> ClassificacaoIndicativa.DEZ;
+            case "teen" -> ClassificacaoIndicativa.DOZE;
+            case "mature" -> ClassificacaoIndicativa.DEZESSEIS;
+            case "adults-only" -> ClassificacaoIndicativa.DEZOITO;
+            default -> null;
+        };
+    }
+}
