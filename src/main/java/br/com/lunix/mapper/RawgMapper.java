@@ -16,11 +16,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/*
+    Componente responsável por realizar o mapeamento
+    de dados vindos da API da RAWG em entidades da aplicação.
+
+    Possui métodos de tradução de dados da API para ENUMS,
+    transformação de dados em listas dentre outros
+*/
 @Component
 public class RawgMapper {
 
     private static final Logger log = LoggerFactory.getLogger(RawgMapper.class);
 
+    /*
+        Método principal que pega todos os dados encontrados
+        e os transforma em uma entidade JogoMapeadoDto.
+
+        @param dto: Resposta da api a ser transformada.
+        @return: Retorna um record com o jogo mapeado.
+    */
     public JogoMapeadoDto toJogoMapeado(RawgGameDto dto) {
         if (dto == null) {
             return null;
@@ -42,23 +56,62 @@ public class RawgMapper {
         return new JogoMapeadoDto(jogo, nomeDev);
     }
 
+    /*
+        Método privado que extrai o nome do desenvolvedor
+        da resposta da API.
+
+        @param devDtos: Lista com os desenvolvedores do jogo.
+
+        @return: Retorna uma única String com o nome do desenvolvedor
+        principal do jogo. Em caso de falha devolve nulo.
+    */
     private String extrairNomeDesenvolvedorPrincipal(List<RawgDeveloperDto> devDtos) {
         return Optional.ofNullable(devDtos)
-                .filter(list -> !list.isEmpty())
-                .map(list -> list.get(0).name())
+                .filter(list -> !list.isEmpty()) // Fiotra a lista garantindo que não esteja vazia.
+                .map(list -> list.get(0).name()) // Mapeia a lista para pegar o primeiro nome que aparece.
                 .orElse(null);
     }
 
+    /*
+        Método privado que pega a lista de Generos recebida
+        da API e a transforma em uma lista de ENUMS referente a
+        nossa aplicação.
+
+        @param generoDtos: Lista de Generos recebida da API.
+
+        @return: Retorna uma lista transformada com todos os gêneros
+        do jogo específico.
+    */
     private List<Genero> toGeneroList(List<RawgGenreDto> generoDtos) {
-        if (generoDtos == null) return Collections.emptyList();
+        if (generoDtos == null) return Collections.emptyList(); // Em caso de lista vazia, retornar nulo.
+
+        // Faz o mapeamento do objeto para transformar em itens do ENUM Genero.
         return generoDtos.stream().map(this::toGenero).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
+    /*
+        Método privado responsável por transformar uma lista
+        de plataformas recebidas da API em objetos ENUM do tipo
+        Plataforma.
+
+        @param plataformaDtos: Lista de plataformas recebidas para realizar a
+        conversão.
+
+        @return: Retorna a lista convertida de Plataforma.
+    */
     private List<Plataforma> toPlataformaList(List<RawgPlatformEntryDto> plataformaDtos) {
-        if (plataformaDtos == null) return Collections.emptyList();
+        if (plataformaDtos == null) return Collections.emptyList(); // Caso esteja vazia retorna nulo.
+
+        // Faz o mapeamento do objeto e transforma no objeto Plataforma.
         return plataformaDtos.stream().map(entry -> toPlataforma(entry.platform())).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
+    /*
+        Pega maior parte das respostas esperadas da API
+        e traduz para ENUMS da aplicação.
+
+        Caso não encontre alguma define como 'OUTRO'.
+    */
     private Genero toGenero(RawgGenreDto dto) {
         if (dto == null || dto.slug() == null) return null;
         return switch (dto.slug()) {
@@ -82,6 +135,12 @@ public class RawgMapper {
         };
     }
 
+    /*
+        Método que pega respostas esperadas de plataformas
+        e traduz para o ENUM Plataforma.
+
+        Caso não encontre cai no Enum 'OUTRO'.
+    */
     private Plataforma toPlataforma(RawgPlatformDto dto) {
         if (dto == null || dto.slug() == null) return null;
         return switch (dto.slug()) {
@@ -108,6 +167,11 @@ public class RawgMapper {
         };
     }
 
+    /*
+        Método que traduz as classificações indicativas
+        recebidas pela API e traduz para o objetos do Enum
+        ClassificacaoIndicativa.
+    */
     private ClassificacaoIndicativa toClassificacaoIndicativa(RawgEsrbRatingDto dto) {
         if (dto == null || dto.slug() == null) return null;
         return switch (dto.slug()) {
