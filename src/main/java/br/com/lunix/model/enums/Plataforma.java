@@ -1,5 +1,10 @@
 package br.com.lunix.model.enums;
 
+/*
+    Enum que traz diversas plataformas que podem ser atribuídas
+    a jogos, em caso não se qualifique nos selecionados ele
+    pode ser colocado como outro.
+*/
 public enum Plataforma {
     PC,
     PLAYSTATION_5,
