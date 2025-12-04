@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.TestPropertySource;
 
@@ -95,7 +97,7 @@ public class EmpresaRepositoryTest {
         empresa3.setPaisOrigem("EUA");
         repository.save(empresa3);
 
-        List<Empresa> empresasBrasileiras = repository.findByPaisOrigemIgnoreCase("brasil");
+        Page<Empresa> empresasBrasileiras = repository.findByPaisOrigemIgnoreCase("brasil", PageRequest.of(0, 10));
 
         assertThat(empresasBrasileiras).hasSize(2);
         assertThat(empresasBrasileiras).extracting(Empresa::getNome)
