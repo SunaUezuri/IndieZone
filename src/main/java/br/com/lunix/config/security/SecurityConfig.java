@@ -1,5 +1,6 @@
 package br.com.lunix.config.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -7,9 +8,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
     Classe de configuração de seguraça da aplicação.
@@ -19,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     /*
@@ -31,51 +34,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /*
-        Bean que define as rotas públicas e privadas da aplicação
-        indicando também quais rtas cada tipo de usuário pode acessar
-        e que métodos realizar.
+    @Autowired
+    private SecurityFilter securityFilter;
 
-        User - Só tem permissões de leitura e acesso a páginas públicas como
-        a de login, registro, home e etc.
-
-        Dev - Permissão de leitura assim como Users e permissões de escrita, edição e
-        delete de jogos próprios do desenvolvedor, além de acesso a páginas exclusivas de
-        Devs para dashboards sobre seus jogos.
-
-        Admin - Acesso total a todas as funcionalidades da aplicação e exclusivos como assuntos relacionados
-        as empresas, controle de usuários e dashboards informativos.
-    */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Desabilita os recursos abstratos HTTP
-                .authorizeHttpRequests(authz -> authz
-                        // Rotas públicas
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/", "/jogos", "/jogos/**", "/empresas", "/empresas/**", "/sobre").permitAll()
-                        .requestMatchers("/login", "/registro/**").permitAll()
-
-                        // Permissões de Dev
-                        .requestMatchers("/dev/**").hasRole("DEV")
-
-                        // Permissões de ADM
-                        .requestMatchers("/admin").hasRole("ADMIN")
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable) // Desliga CSRF (desnecessário para API REST)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // MUDANÇA CRUCIAL: Sem sessão no servidor
+                .authorizeHttpRequests(authorize -> authorize
+                        // Rotas Públicas (Login, Registro e Swagger)
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger
+                        // Todo o resto exige autenticação
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                );
-
-                return http.build();
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
