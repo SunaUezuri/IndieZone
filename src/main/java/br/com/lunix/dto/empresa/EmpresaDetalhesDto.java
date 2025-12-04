@@ -9,5 +9,11 @@ import java.util.List;
     DTO que trás detalhes sobre a empresa
     exibida
 */
-public record EmpresaDetalhesDto(Empresa empresa, List<JogoResponseDto> jogos) {
-}
+public record EmpresaDetalhesDto(
+        String id,
+        String nome,
+        String descricao,
+        String paisOrigem,
+        String urlLogo,
+        List<JogoResponseDto> jogos
+) {}
