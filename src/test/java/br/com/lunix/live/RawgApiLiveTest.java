@@ -34,7 +34,7 @@ public class RawgApiLiveTest {
     @Test
     public void deveConectarNaApiRealDaRawgEBuscarDadosCompletos() {
 
-        String termoBusca = "Hollow Knight";
+        String termoBusca = "Hollow Knight: Silksong";
         int limite = 1;
 
         List<RawgGameDto> resultado = rawgApiService.buscarJogos(termoBusca, limite);

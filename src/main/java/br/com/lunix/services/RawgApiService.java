@@ -2,6 +2,8 @@ package br.com.lunix.services;
 
 import br.com.lunix.dto.rawg.RawgRecords.RawgApiResponseDto;
 import br.com.lunix.dto.rawg.RawgRecords.RawgGameDto;
+import br.com.lunix.dto.rawg.RawgRecords.RawgGenreDto;
+import br.com.lunix.exceptions.JogoNaoIndieException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /*
@@ -64,10 +67,21 @@ public class RawgApiService {
             RawgApiResponseDto response = restTemplate.getForObject(uri, RawgApiResponseDto.class);
 
             if (response != null && response.results() != null) {
-                log.info("Encontrados {} resultados para '{}'", response.results().size(), termoBusca);
+                // Pega a resposta encontrada e verifica se é um jogo indie
+                List<RawgGameDto> jogosIndies = response.results().stream()
+                        .filter(this::isIndie)
+                        .collect(Collectors.toList());
 
-                return response.results();
+                if (jogosIndies.isEmpty()) {
+                    log.warn("O jogo '{}' foi encontrado na RAWG, mas filtrado pois não é INDIE.", termoBusca);
+                    throw new JogoNaoIndieException("O jogo '" + termoBusca + "' foi encontrado, mas não é classificado como INDIE.");
+                }
+
+
+                return jogosIndies;
             }
+        } catch (JogoNaoIndieException e){
+            throw e;
         } catch (HttpClientErrorException e) {
             log.error("Erro na chamada para a API da RAWG: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
         } catch (Exception e) {
@@ -77,5 +91,24 @@ public class RawgApiService {
         // Caso não encontre jogos devolve um aviso e uma lista vazia
         log.warn("Nenhum resultado encontrado ou erro na API para a busca: '{}'", termoBusca);
         return Collections.emptyList();
+    }
+
+    /*
+        Método auxiliar para verificar se o jogo puxado da API é Indie
+
+        @param game: Jogo específico que é pesquisado
+        @return: retorna true se o jogo for indie, se for false a api deve retornar nada
+    */
+    private boolean isIndie(RawgGameDto game) {
+        if (game.genres() == null || game.genres().isEmpty()){
+            return false;
+        }
+
+        for (RawgGenreDto genre : game.genres()) {
+            if ("indie".equalsIgnoreCase(genre.slug()) || "indie".equalsIgnoreCase(genre.name())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

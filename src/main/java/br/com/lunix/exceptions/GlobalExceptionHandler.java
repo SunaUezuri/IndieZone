@@ -25,6 +25,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(JogoNaoIndieException.class)
+    public ResponseEntity<StandardError> notIndieGame(JogoNaoIndieException e, HttpServletRequest request) {
+        String error = "Jogo não listado não é indie";
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     // Tratamento para regras de negócio (400) - Ex: Email já cadastrado
     @ExceptionHandler(RegraDeNegocioException.class)
     public ResponseEntity<StandardError> businessRule(RegraDeNegocioException e, HttpServletRequest request) {

@@ -91,8 +91,6 @@ class RawgApiServiceTest {
         assertThat(resultado).isNotNull().hasSize(1);
         RawgGameDto jogoRetornado = resultado.get(0);
         assertThat(jogoRetornado.name()).isEqualTo("Hollow Knight");
-
-        // --- NOVA VERIFICAÇÃO ---
         assertThat(jogoRetornado.esrbRating()).isNotNull();
         assertThat(jogoRetornado.esrbRating().slug()).isEqualTo("everyone-10-plus");
     }
