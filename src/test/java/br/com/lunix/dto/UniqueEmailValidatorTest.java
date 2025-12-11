@@ -18,11 +18,8 @@ import static org.mockito.Mockito.when;
 /*
     Classe com testes para garantir que a anotação
     de email único esteja funcionando.
-
-    @ExtendWith - Garante que a classe use o mockito
 */
 @ExtendWith(MockitoExtension.class)
-@TestPropertySource(properties = "mongock.enabled=false")
 public class UniqueEmailValidatorTest {
 
     // Repositório mockado

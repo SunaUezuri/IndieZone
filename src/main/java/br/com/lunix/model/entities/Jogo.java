@@ -51,7 +51,7 @@ public class Jogo {
 
     private double notaMedia = 0.0;
 
-    private double totalAvaliacoes = 0;
+    private int totalAvaliacoes = 0;
 
     @DBRef
     private Empresa empresa;

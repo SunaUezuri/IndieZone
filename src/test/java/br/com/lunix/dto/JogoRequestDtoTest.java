@@ -5,6 +5,9 @@ import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +25,17 @@ import static org.assertj.core.api.Assertions.assertThat;
     Classe de teste para validar as anotações
     de validação da classe do DTO de jogo.
 */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@TestPropertySource(properties = "mongock.enabled=false")
 public class JogoRequestDtoTest {
 
     @Autowired
     private Validator validator;
+
+    @BeforeEach
+    void setUp() {
+        // Inicializa o validador padrão do Hibernate/Jakarta
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        this.validator = factory.getValidator();
+    }
 
     /*
         Valida se o jogo está com a data no passado e se
