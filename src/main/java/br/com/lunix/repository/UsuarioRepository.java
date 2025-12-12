@@ -1,6 +1,8 @@
 package br.com.lunix.repository;
 
 import br.com.lunix.model.entities.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
@@ -15,4 +17,10 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
         return: Retorna um único usuário com email correspondente ao utilizado na busca
     */
     Optional<Usuario> findByEmail(String email);
+
+    /*
+        Busca usuários pelo nome dos mesmos.
+        @param nome - Nome do usuário na aplicação.
+    */
+    Page<Usuario> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 }

@@ -3,9 +3,11 @@ package br.com.lunix.exceptions;
 import br.com.lunix.dto.error.StandardError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +65,23 @@ public class GlobalExceptionHandler {
         String error = "Erro de autenticação";
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError err = new StandardError(Instant.now(), status.value(), error, "Credenciais inválidas", request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    // Tratamento para conta desativada (403)
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<StandardError> accountDisabled(DisabledException e, HttpServletRequest request) {
+        String error = "Conta desativada";
+        HttpStatus status = HttpStatus.FORBIDDEN;
+
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                error,
+                "Sua conta foi desativada. Entre em contato com o suporte.",
+                request.getRequestURI()
+        );
+
         return ResponseEntity.status(status).body(err);
     }
 
