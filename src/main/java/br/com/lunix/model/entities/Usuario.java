@@ -81,7 +81,7 @@ public class Usuario implements UserDetails {
     // Método que busca a senah do usuário para realizar o login
     @Override
     public String getPassword() {
-        return this.getPassword();
+        return this.senha;
     }
 
     // Método que define se a conta está expirada ou não
