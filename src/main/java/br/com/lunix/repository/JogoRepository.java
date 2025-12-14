@@ -87,5 +87,5 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     long countByGeneros(Genero genero);
 
     // Conta os jogos pela plataforma
-    long conutByPlataformas(Plataforma plataforma);
+    long countByPlataformas(Plataforma plataforma);
 }

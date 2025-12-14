@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -64,6 +66,14 @@ public class UsuarioService {
 
         // Transformando o dto em entidade
         Usuario usuario = mapper.toEntity(dto);
+
+        if (!dto.idEmpresa().isEmpty()) {
+            Empresa empresa = empresaRepository.findById(dto.idEmpresa())
+                    .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada com o id"));
+
+            usuario.setEmpresa(empresa);
+
+        }
 
         // Criptografando a senha do usuário
         usuario.setSenha(passwordEncoder.encode(dto.senha()));

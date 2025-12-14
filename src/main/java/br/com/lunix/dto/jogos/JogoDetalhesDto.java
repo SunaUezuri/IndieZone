@@ -2,10 +2,12 @@ package br.com.lunix.dto.jogos;
 
 import br.com.lunix.dto.avaliacao.AvaliacaoResponseDto;
 import br.com.lunix.model.entities.Jogo;
+import br.com.lunix.model.entities.PrecoPlataforma;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public record JogoDetalhesDto(
         LocalDate dataLancamento,
         ClassificacaoIndicativa classificacao,
         List<Genero> generos,
+        List<PrecoPlataforma> precos,
         List<Plataforma> plataformas,
         double notaMedia,
         int totalAvaliacoes,
@@ -27,5 +30,5 @@ public record JogoDetalhesDto(
         List<AvaliacaoResponseDto> avaliacoesAdmin,
         List<AvaliacaoResponseDto> avaliacoesUsuario,
         List<AvaliacaoResponseDto> avaliacoesDev
-) {
+) implements Serializable {
 }

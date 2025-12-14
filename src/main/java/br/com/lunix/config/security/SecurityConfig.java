@@ -54,6 +54,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/jogos/meus-jogos").hasAnyRole("DEV", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/jogos/rawg-import").hasAnyRole("DEV", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/jogos/dashboard").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/jogos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/empresas/**").permitAll()
+
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll() // Swagger
                         // Todo o resto exige autenticação
                         .anyRequest().authenticated()

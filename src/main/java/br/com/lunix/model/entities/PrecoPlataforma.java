@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /*
     Classe de suporte que recebe informações de sobre
     preços de um jogo em diversas lojas
@@ -16,7 +19,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrecoPlataforma {
+public class PrecoPlataforma implements Serializable {
 
     private String nomeLoja;
 

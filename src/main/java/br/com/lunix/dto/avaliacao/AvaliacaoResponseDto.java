@@ -2,6 +2,7 @@ package br.com.lunix.dto.avaliacao;
 
 import br.com.lunix.dto.usuario.UsuarioPublicProfileDto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /*
@@ -14,5 +15,5 @@ public record AvaliacaoResponseDto(
         String comentario,
         LocalDateTime dataCriacao,
         UsuarioPublicProfileDto usuario
-) {
+) implements Serializable {
 }

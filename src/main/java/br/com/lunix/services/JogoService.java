@@ -331,7 +331,8 @@ public class JogoService {
     @Transactional
     @Caching(evict = {
             @CacheEvict(value = "jogos-detalhes", key = "#id"),
-            @CacheEvict(value = "jogos-top10-nota", allEntries = true)
+            @CacheEvict(value = "jogos-top10-nota", allEntries = true),
+            @CacheEvict(value = "jogos-top10-recentes", allEntries = true)
     })
     public void patchGeneros(String id, JogoGenresPatchDto dto) {
         Jogo jogo = buscarJogoEValidarPermissao(id);
@@ -380,6 +381,7 @@ public class JogoService {
         Gatilho administrativo para atualizar preços de TODOS os jogos.
         Cuidado: Pode gerar alta carga na API externa (Rate Limiting).
     */
+    @CacheEvict(value = "jogo-detalhes", key = "#jogoId")
     public void solicitarAtualizacaoGlobal() {
         Usuario u = getUsuarioLogado();
         if (!u.getRoles().contains(Role.ROLE_ADMIN)) {
@@ -400,6 +402,7 @@ public class JogoService {
         return: boolean indicando se houve atualização (para controle de Thread.sleep no Consumer).
     */
     @Transactional
+    @CacheEvict(value = "jogos-detalhes", key = "#jogoId")
     public boolean processarAtualizacaoDePreco(String jogoId) {
         return jogoRepository.findById(jogoId).map(jogo -> {
             log.info("Processando atualização de preço para: {}", jogo.getTitulo());
