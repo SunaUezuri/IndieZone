@@ -381,17 +381,23 @@ public class JogoService {
         Gatilho administrativo para atualizar preços de TODOS os jogos.
         Cuidado: Pode gerar alta carga na API externa (Rate Limiting).
     */
-    @CacheEvict(value = "jogo-detalhes", key = "#jogoId")
+    @CacheEvict(value = "jogo-detalhes", allEntries = true)
     public void solicitarAtualizacaoGlobal() {
         Usuario u = getUsuarioLogado();
         if (!u.getRoles().contains(Role.ROLE_ADMIN)) {
             throw new RegraDeNegocioException("Apenas admin pode disparar atualização global.");
         }
 
-        List<Jogo> todosJogos = jogoRepository.findAll();
-        log.info("Disparando atualização para {} jogos.", todosJogos.size());
+        enviarTodosJogosParaFila();
+    }
 
-        todosJogos.forEach(jogo -> rabbitTemplate.convertAndSend(queueName, jogo.getId()));
+    /*
+        Método exclusivo para o SCHEDULER para processar
+        a atualização de rotina dos preços.
+    */
+    public void executarRotinaAutomaticaDePrecos() {
+        log.info("SCHEDULER: Iniciando rotina automática de atualização de preços...");
+        enviarTodosJogosParaFila();
     }
 
     /*
@@ -519,5 +525,13 @@ public class JogoService {
                 .filter(av -> av.getUsuario().getRoles().contains(role))
                 .map(avaliacaoMapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    // Método privado que dispara o gatilho para atualizar manualmente os preços dos jogos
+    private void enviarTodosJogosParaFila() {
+        List<Jogo> todosJogos = jogoRepository.findAll();
+        log.info("Disparando atualização para {} jogos.", todosJogos.size());
+
+        todosJogos.forEach(jogo -> rabbitTemplate.convertAndSend(queueName, jogo.getId()));
     }
 }
