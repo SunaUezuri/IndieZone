@@ -6,7 +6,10 @@ import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
 
         return: Lista de jogos cujo o título contenha o que foi inserido
     */
-    List<Jogo> findByTituloContainingIgnoreCase(String titulo);
+    Page<Jogo> findByTituloContainingIgnoreCase(String titulo, Pageable pageable);
 
     /*
          Procura jogos a partir do gênero inserido
@@ -28,7 +31,7 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
 
          return: Lista de jogos que contém o gênero inserido
     */
-    List<Jogo> findByGeneros(Genero genero);
+    Page<Jogo> findByGeneros(Genero genero, Pageable pageable);
 
     /*
         Procura todos os jogos pertencentes a uma empresa específica
@@ -37,7 +40,7 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
 
         return: Lista de jogos da empresa inserida
     */
-    List<Jogo> findByEmpresa(Empresa empresa);
+    Page<Jogo> findByEmpresa(Empresa empresa, Pageable pageable);
 
     /*
         Procura jogos desenvolvidos por um único DEV (ex: Toby fox)
@@ -46,14 +49,14 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
 
         return: Lista de jogos feitos por aquele DEV
     */
-    List<Jogo> findByDevAutonomo(Usuario devAutonomo);
+    Page<Jogo> findByDevAutonomo(Usuario devAutonomo, Pageable pageable);
 
     /*
         Busca jogos a partir da classificação indicativa do mesmo
 
         @param classificacao
     */
-    List<Jogo> findByClassificacao(ClassificacaoIndicativa classificacao);
+    Page<Jogo> findByClassificacao(ClassificacaoIndicativa classificacao, Pageable pageable);
 
     /*
         Busca os 10 jogos mais bem avaliados da aplicação
@@ -70,9 +73,19 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     */
     List<Jogo> findTop10ByOrderByDataLancamentoDesc();
 
-    /**
-     * Busca todos os jogos que contêm uma plataforma específica em sua lista.
-     * Essencial para a funcionalidade de filtro por plataforma.
-     */
-    List<Jogo> findByPlataformas(Plataforma plataforma);
+    /*
+      Busca todos os jogos que contêm uma plataforma específica em sua lista.
+      Essencial para a funcionalidade de filtro por plataforma.
+    */
+    Page<Jogo> findByPlataformas(Plataforma plataforma, Pageable pageable);
+
+    // Encontra jogos que falharam na sincronização (lista de preços vazia)
+    @Query("{ 'precos': { $exists: true, $size: 0 } }")
+    Page<Jogo> findByPrecosIsEmpty(Pageable pageable);
+
+    // Conta os jogos por genero
+    long countByGeneros(Genero genero);
+
+    // Conta os jogos pela plataforma
+    long conutByPlataformas(Plataforma plataforma);
 }
