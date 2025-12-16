@@ -26,6 +26,8 @@ public class JogoMapper {
         jogo.setClassificacao(dto.classificacao());
         jogo.setGeneros(dto.generos());
         jogo.setPlataformas(dto.plataformas());
+        jogo.setUrlTrailer(dto.urlTrailer());
+        jogo.setScreenshots(dto.screenshots());
 
         // Valores padrão de inicialização
         jogo.setNotaMedia(0.0);
@@ -46,6 +48,14 @@ public class JogoMapper {
         jogo.setUrlCapa(dto.urlCapa());
         jogo.setDataLancamento(dto.dataLancamento());
         jogo.setClassificacao(dto.classificacao());
+
+        if (dto.urlTrailer() != null && !dto.urlTrailer().isEmpty()){
+            jogo.setUrlTrailer(dto.urlTrailer());
+        }
+
+        if (dto.screenshots() != null && !dto.screenshots().isEmpty()) {
+            jogo.setScreenshots(dto.screenshots());
+        }
 
         if (dto.generos() != null && !dto.generos().isEmpty()) {
             jogo.setGeneros(dto.generos());
@@ -107,6 +117,8 @@ public class JogoMapper {
                 jogo.getNotaMedia(),
                 jogo.getTotalAvaliacoes(),
                 determinarNomeCriador(jogo),
+                jogo.getUrlTrailer(),
+                jogo.getScreenshots(),
                 avAdmin != null ? avAdmin : Collections.emptyList(),
                 avUser != null ? avUser : Collections.emptyList(),
                 avDev != null ? avDev : Collections.emptyList()

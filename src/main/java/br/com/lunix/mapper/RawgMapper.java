@@ -46,6 +46,18 @@ public class RawgMapper {
         jogo.setDataLancamento(dto.released());
         jogo.setUrlCapa(dto.backgroundImage());
 
+        if (dto.shortScreenshots() != null) {
+            List<String> urls = dto.shortScreenshots().stream()
+                    .map(RawgScreenshotDto::image) // Pega só a URL da imagem
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            jogo.setScreenshots(urls);
+        }
+
+        if (dto.clip() != null && dto.clip().clip() != null) {
+            jogo.setUrlTrailer(dto.clip().clip()); // Pega a URL do vídeo (SD ou HD)
+        }
+
         // Mapeia as listas, traduzindo os valores da API para nossos Enums
         jogo.setGeneros(toGeneroList(dto.genres()));
         jogo.setPlataformas(toPlataformaList(dto.platforms()));

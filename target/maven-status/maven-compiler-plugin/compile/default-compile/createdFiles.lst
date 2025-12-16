@@ -12,6 +12,7 @@ br\com\lunix\dto\rawg\RawgRecords$RawgGameDto.class
 br\com\lunix\model\entities\PrecoPlataforma.class
 br\com\lunix\dto\rawg\RawgRecords$RawgPlatformEntryDto.class
 br\com\lunix\model\entities\Jogo.class
+br\com\lunix\dto\rawg\RawgRecords$RawgMoviesResponseDto.class
 br\com\lunix\dto\jogos\JogoMapeadoDto.class
 br\com\lunix\exceptions\GlobalExceptionHandler.class
 br\com\lunix\annotation\engine\UniqueEmailValidator.class
@@ -65,6 +66,7 @@ br\com\lunix\model\enums\ClassificacaoIndicativa.class
 br\com\lunix\repository\JogoRepository.class
 br\com\lunix\util\ApiDataExplorer$MasterDataDto.class
 br\com\lunix\LunixApplication.class
+br\com\lunix\dto\rawg\RawgRecords$RawgMovieDataDto.class
 br\com\lunix\dto\rawg\RawgRecords.class
 br\com\lunix\dto\empresa\EmpresaUpdateDto.class
 br\com\lunix\dto\empresa\EmpresaResponseDto.class
@@ -77,3 +79,4 @@ br\com\lunix\config\migrations\V1_004__CreateQueryIndexes.class
 br\com\lunix\dto\avaliacao\AvaliacaoResponseDto.class
 br\com\lunix\dto\itad\ItadRecords$ItadPriceResultDto.class
 br\com\lunix\util\ApiDataExplorer$ApiResponse.class
+br\com\lunix\dto\rawg\RawgRecords$RawgMovieResultDto.class

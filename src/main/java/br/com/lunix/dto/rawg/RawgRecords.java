@@ -28,6 +28,23 @@ public class RawgRecords {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record RawgPlatformEntryDto(@JsonProperty("platform") RawgPlatformDto platform) {}
 
+    // Mapeia a imagem do screenshot
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgScreenshotDto(int id, String image) {}
+
+    // Mapeia o clipe de vídeo (Trailer curto)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgClipDto(String clip, String video, String preview) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgMovieDataDto(@JsonProperty("480") String quality480, @JsonProperty("max") String qualityMax) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgMovieResultDto(int id, String name, String preview, RawgMovieDataDto data) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RawgMoviesResponseDto(int count, List<RawgMovieResultDto> results) {}
+
     // Record final que recebe todos os dados necessários
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record RawgGameDto(
@@ -40,7 +57,9 @@ public class RawgRecords {
             @JsonProperty("platforms") List<RawgPlatformEntryDto> platforms,
             @JsonProperty("genres") List<RawgGenreDto> genres,
             @JsonProperty("developers") List<RawgDeveloperDto> developers,
-            @JsonProperty("description_raw") String description
+            @JsonProperty("description_raw") String description,
+            @JsonProperty("short_screenshots") List<RawgScreenshotDto> shortScreenshots,
+            @JsonProperty("clip") RawgClipDto clip
     ) {}
 
     // Record que recebe a lista de jogos encontrados

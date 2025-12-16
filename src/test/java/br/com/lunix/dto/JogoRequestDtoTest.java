@@ -6,16 +6,14 @@ import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import jakarta.validation.Validator;
-import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -45,11 +43,15 @@ public class JogoRequestDtoTest {
     public void quandoDtoEValidoComDataNoPassadoNaoDeveHaverViolacoes() {
         // Cria um exemplo de dto
         var dto = new JogoRequestDto(
-                "Jogo Válido", "Descrição OK", null,
+                "Jogo Válido",
+                "Descrição OK",
+                null,
                 LocalDate.now().minusYears(1),
                 ClassificacaoIndicativa.LIVRE,
                 List.of(Genero.AVENTURA),
-                List.of(Plataforma.PC)
+                List.of(Plataforma.PC),
+                null,
+                null
         );
 
         // Aplica o validador no dto de exemplo
@@ -67,11 +69,15 @@ public class JogoRequestDtoTest {
     public void quandoDtoEValidoComDataNoPresenteNaoDeveHaverViolacoes() {
         // Cria um exemplo de dto
         var dto = new JogoRequestDto(
-                "Jogo Válido", "Descrição OK", null,
-                LocalDate.now().minusYears(1),
+                "Jogo Válido",
+                "Descrição OK",
+                null,
+                LocalDate.now(), // Data atual
                 ClassificacaoIndicativa.LIVRE,
                 List.of(Genero.AVENTURA),
-                List.of(Plataforma.PC)
+                List.of(Plataforma.PC),
+                null,
+                null
         );
 
         // Aplica o validador
@@ -88,11 +94,15 @@ public class JogoRequestDtoTest {
     @Test
     public void quandoDataDeLancamentoENoFuturoDeveHaverViolacao() {
         var dto = new JogoRequestDto(
-                "Jogo Inválido", "Descrição OK", null,
+                "Jogo Inválido",
+                "Descrição OK",
+                null,
                 LocalDate.now().plusDays(1), // Data no futuro
                 ClassificacaoIndicativa.LIVRE,
                 List.of(Genero.AVENTURA),
-                List.of(Plataforma.PC)
+                List.of(Plataforma.PC),
+                null,
+                null
         );
 
         Set<ConstraintViolation<JogoRequestDto>> violations = validator.validate(dto);
@@ -115,11 +125,15 @@ public class JogoRequestDtoTest {
     @Test
     public void quandoDataDeLancamentoENulaDeveHaverViolacaoDeNotNull() {
         var dto = new JogoRequestDto(
-                "Jogo Inválido", "Descrição OK", null,
+                "Jogo Inválido",
+                "Descrição OK",
+                null,
                 null, // Data nula
                 ClassificacaoIndicativa.LIVRE,
                 List.of(Genero.AVENTURA),
-                List.of(Plataforma.PC)
+                List.of(Plataforma.PC),
+                null,
+                null
         );
 
         Set<ConstraintViolation<JogoRequestDto>> violations = validator.validate(dto);

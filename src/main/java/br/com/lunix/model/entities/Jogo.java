@@ -41,6 +41,10 @@ public class Jogo {
 
     private String urlCapa;
 
+    private String urlTrailer;
+
+    private List<String> screenshots = new ArrayList<>();
+
     private ClassificacaoIndicativa classificacao;
 
     private List<Genero> generos = new ArrayList<>();

@@ -54,6 +54,7 @@ C:\Dev\lunix\src\main\java\br\com\lunix\exceptions\RegraDeNegocioException.java
 C:\Dev\lunix\src\main\java\br\com\lunix\model\entities\Empresa.java
 C:\Dev\lunix\src\main\java\br\com\lunix\mapper\JogoMapper.java
 C:\Dev\lunix\src\main\java\br\com\lunix\model\enums\ClassificacaoIndicativa.java
+C:\Dev\lunix\src\main\java\br\com\lunix\dto\igdb\IgdbRecords.java
 C:\Dev\lunix\src\main\java\br\com\lunix\services\itad\ItadApiService.java
 C:\Dev\lunix\src\main\java\br\com\lunix\dto\jogos\JogoAdminRequestDto.java
 C:\Dev\lunix\src\main\java\br\com\lunix\dto\usuario\TokenResponseDto.java
@@ -68,6 +69,7 @@ C:\Dev\lunix\src\main\java\br\com\lunix\annotation\interfaces\PastOrPresentDate.
 C:\Dev\lunix\src\main\java\br\com\lunix\model\enums\Plataforma.java
 C:\Dev\lunix\src\main\java\br\com\lunix\services\dashboard\DashboardService.java
 C:\Dev\lunix\src\main\java\br\com\lunix\model\enums\Genero.java
+C:\Dev\lunix\src\main\java\br\com\lunix\services\igdb\IgdbApiService.java
 C:\Dev\lunix\src\main\java\br\com\lunix\dto\usuario\UsuarioProfileDto.java
 C:\Dev\lunix\src\main\java\br\com\lunix\repository\UsuarioRepository.java
 C:\Dev\lunix\src\main\java\br\com\lunix\config\migrations\V1_004__CreateQueryIndexes.java

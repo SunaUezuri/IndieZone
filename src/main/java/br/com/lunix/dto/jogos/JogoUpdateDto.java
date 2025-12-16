@@ -39,6 +39,10 @@ public record JogoUpdateDto(
         List<Genero> generos,
         @NotEmpty(message = "Selecione ao menos uma plataforma.")
         @Schema(description = "Lista de plataformas que se dá para jogar", example = "[ 'PC', 'SWITCH' ]")
-        List<Plataforma> plataformas
+        List<Plataforma> plataformas,
+        @Schema(description = "URL do trailer (Youtube/Clip)", example = "https://video.com/clip.mp4")
+        String urlTrailer,
+        @Schema(description = "Lista de URLs de screenshots", example = "['http://img1.com', 'http://img2.com']")
+        List<String> screenshots
 ) {
 }

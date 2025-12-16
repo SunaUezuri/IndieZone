@@ -25,13 +25,28 @@ public class RawgMapperTest {
 
     @Test
     public void deveMapearRawgGameDtoParaJogoMapeadoComSucesso() {
-        // Cenário (Arrange) - Criamos um DTO rico com todos os campos que esperamos
+        // Cenário (Arrange)
         var esrbDto = new RawgEsrbRatingDto(2, "Everyone 10+", "everyone-10-plus");
         var devDto = new RawgDeveloperDto(1, "Team Cherry", "team-cherry");
         var genreDto = new RawgGenreDto(1, "Adventure", "adventure");
         var platformDto = new RawgPlatformEntryDto(new RawgPlatformDto(4, "PC", "pc"));
-        var rawgGameDto = new RawgGameDto(123, "hollow-knight", "Hollow Knight", LocalDate.of(2017, 2, 24),
-                "url/capa.jpg", esrbDto, List.of(platformDto), List.of(genreDto), List.of(devDto), ""
+
+        var screenshotDto = new RawgScreenshotDto(100, "https://img.com/screen1.jpg");
+        var clipDto = new RawgClipDto("https://video.com/trailer.mp4", "video", "preview");
+
+        var rawgGameDto = new RawgGameDto(
+                123,
+                "hollow-knight",
+                "Hollow Knight",
+                LocalDate.of(2017, 2, 24),
+                "url/capa.jpg",
+                esrbDto,
+                List.of(platformDto),
+                List.of(genreDto),
+                List.of(devDto),
+                "Descrição do jogo",
+                List.of(screenshotDto),
+                clipDto
         );
 
         // Ação (Act)
@@ -52,17 +67,23 @@ public class RawgMapperTest {
         assertThat(jogo.getGeneros()).containsExactly(Genero.AVENTURA);
         assertThat(jogo.getPlataformas()).containsExactly(Plataforma.PC);
         assertThat(jogo.getClassificacao()).isEqualTo(ClassificacaoIndicativa.DEZ);
+        assertThat(jogo.getScreenshots()).hasSize(1);
+        assertThat(jogo.getScreenshots().get(0)).isEqualTo("https://img.com/screen1.jpg");
+        assertThat(jogo.getUrlTrailer()).isEqualTo("https://video.com/trailer.mp4");
     }
 
     @Test
     public void deveLidarComListasNulasOuVaziasCorretamente() {
         // Cenário com listas nulas e vazias
+        // Passamos null para screenshots e clip também
         var rawgGameDto = new RawgGameDto(
                 123, "slug", "Jogo Simples", null, null, null,
                 null,
                 List.of(),
                 null,
-                ""
+                "",
+                null,
+                null
         );
 
         // Ação
@@ -73,15 +94,23 @@ public class RawgMapperTest {
         assertThat(resultado.jogo().getPlataformas()).isNotNull().isEmpty();
         assertThat(resultado.jogo().getGeneros()).isNotNull().isEmpty();
         assertThat(resultado.nomeDesenvolvedorPrincipal()).isNull();
+
+        // Verifica se os novos campos lidam bem com null (não lançam exceção)
+        assertThat(resultado.jogo().getScreenshots()).isNullOrEmpty();
+        assertThat(resultado.jogo().getUrlTrailer()).isNull();
     }
 
     @Test
     public void deveMapearSlugsDesconhecidosParaOutros() {
         var genreDto = new RawgGenreDto(99, "Music", "music");
         var platformDto = new RawgPlatformEntryDto(new RawgPlatformDto(99, "Atari 2600", "atari-2600"));
+
+        // Passamos listas vazias ou nulas para os novos campos, pois o foco aqui é Enum
         var rawgGameDto = new RawgGameDto(
                 456, "slug", "Jogo Legado", null, null, null,
-                List.of(platformDto), List.of(genreDto), List.of(), null
+                List.of(platformDto), List.of(genreDto), List.of(), null,
+                null,
+                null
         );
 
         // Ação

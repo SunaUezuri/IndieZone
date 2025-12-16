@@ -3,6 +3,9 @@ package br.com.lunix.services.rawg;
 import br.com.lunix.dto.rawg.RawgRecords.RawgApiResponseDto;
 import br.com.lunix.dto.rawg.RawgRecords.RawgGameDto;
 import br.com.lunix.dto.rawg.RawgRecords.RawgGenreDto;
+import br.com.lunix.dto.rawg.RawgRecords.RawgMoviesResponseDto;
+import br.com.lunix.dto.rawg.RawgRecords.RawgClipDto;
+import br.com.lunix.dto.rawg.RawgRecords.RawgMovieResultDto;
 import br.com.lunix.exceptions.JogoNaoIndieException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -67,18 +70,19 @@ public class RawgApiService {
             RawgApiResponseDto response = restTemplate.getForObject(uri, RawgApiResponseDto.class);
 
             if (response != null && response.results() != null) {
-                // Pega a resposta encontrada e verifica se é um jogo indie
-                List<RawgGameDto> jogosIndies = response.results().stream()
+
+                // Fluxo: Filtra -> Enriquece com Trailer -> Coleta
+                List<RawgGameDto> jogosProcessados = response.results().stream()
                         .filter(this::isIndie)
+                        .map(this::enriquecerComTrailerSeNecessario)
                         .collect(Collectors.toList());
 
-                if (jogosIndies.isEmpty()) {
+                if (jogosProcessados.isEmpty()) {
                     log.warn("O jogo '{}' foi encontrado na RAWG, mas filtrado pois não é INDIE.", termoBusca);
-                    throw new JogoNaoIndieException("O jogo '" + termoBusca + "' foi encontrado, mas não é classificado como INDIE.");
+                    throw new JogoNaoIndieException("O jogo não é classificado como INDIE.");
                 }
 
-
-                return jogosIndies;
+                return jogosProcessados;
             }
         } catch (JogoNaoIndieException e){
             throw e;
@@ -91,6 +95,113 @@ public class RawgApiService {
         // Caso não encontre jogos devolve um aviso e uma lista vazia
         log.warn("Nenhum resultado encontrado ou erro na API para a busca: '{}'", termoBusca);
         return Collections.emptyList();
+    }
+
+    /*
+      Verifica se o jogo tem o campo 'clip' preenchido.
+      Se não tiver, faz uma chamada extra ao endpoint de movies para tentar achar um trailer.
+
+      @param jogo - Jogo encontrado
+    */
+    private RawgGameDto enriquecerComTrailerSeNecessario(RawgGameDto jogo) {
+        // Se já tem clipe vindo da busca principal, não faz nada
+        if (jogo.clip() != null && jogo.clip().clip() != null) {
+            return jogo;
+        }
+
+        log.info("RAWG: Trailer não encontrado no objeto principal para '{}'. Buscando em /movies...", jogo.name());
+        String trailerUrl = buscarTrailerUrl(jogo.id());
+
+        if (trailerUrl != null) {
+            log.info("RAWG: Trailer encontrado externamente: {}", trailerUrl);
+
+            // Cria um objeto Clip artificial com a URL encontrada
+            RawgClipDto novoClip = new RawgClipDto(trailerUrl, trailerUrl, null);
+
+            return new RawgGameDto(
+                    jogo.id(),
+                    jogo.slug(),
+                    jogo.name(),
+                    jogo.released(),
+                    jogo.backgroundImage(),
+                    jogo.esrbRating(),
+                    jogo.platforms(),
+                    jogo.genres(),
+                    jogo.developers(),
+                    jogo.description(),
+                    jogo.shortScreenshots(),
+                    novoClip
+            );
+        }
+
+        return jogo; // Se não achou nada, retorna o original
+    }
+
+    /*
+       Método auxiliar para buscar o trailer do jogo com lógica de prioridade
+       @param jogoId - Identificador do jogo
+    */
+    private String buscarTrailerUrl(int jogoId) {
+        try {
+            URI uri = UriComponentsBuilder.fromUriString(apiBaseUrl)
+                    .path("/api/games/" + jogoId + "/movies")
+                    .queryParam("key", apiKey)
+                    .build()
+                    .toUri();
+
+            RawgMoviesResponseDto response = restTemplate.getForObject(uri, RawgMoviesResponseDto.class);
+
+            if (response != null && response.results() != null && !response.results().isEmpty()) {
+                List<RawgMovieResultDto> videos = response.results();
+
+                String url = buscarPorPalavrasChave(videos, "trailer", "launch", "official");
+                if (url != null) return url;
+
+                url = buscarPorPalavrasChave(videos, "teaser", "reveal", "announcement");
+                if (url != null) return url;
+
+                url = buscarPorPalavrasChave(videos, "gameplay", "demo", "first look");
+                if (url != null) return url;
+
+                // Fallback: Se não casar com nada, pega o primeiro da lista
+                log.info("RAWG: Nenhuma palavra-chave encontrada. Usando o primeiro vídeo disponível.");
+                return extrairUrlVideo(videos.get(0));
+            }
+        } catch (Exception e) {
+            log.warn("RAWG: Falha ao buscar trailer extra para o ID {}: {}", jogoId, e.getMessage());
+        }
+        return null;
+    }
+
+    /*
+        Método auxiliar para extrair a URL de melhor qualidade
+    */
+    private String extrairUrlVideo(RawgMovieResultDto movie) {
+        if (movie.data() != null) {
+            if (movie.data().qualityMax() != null) return movie.data().qualityMax();
+            if (movie.data().quality480() != null) return movie.data().quality480();
+        }
+        return null;
+    }
+
+    /*
+        Método auxiliar que itera sobre a lista procurando qualquer uma das palavras fornecidas
+    */
+    private String buscarPorPalavrasChave(List<RawgMovieResultDto> videos, String... palavras) {
+        for (RawgMovieResultDto movie : videos) {
+            String videoName = (movie.name() != null) ? movie.name().toLowerCase() : "";
+
+            for (String palavra : palavras) {
+                if (videoName.contains(palavra)) {
+                    String url = extrairUrlVideo(movie);
+                    if (url != null) {
+                        log.info("RAWG: Vídeo encontrado pela palavra-chave '{}': {}", palavra, movie.name());
+                        return url;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /*

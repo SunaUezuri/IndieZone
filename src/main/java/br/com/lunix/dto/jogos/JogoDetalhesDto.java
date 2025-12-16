@@ -38,6 +38,10 @@ public record JogoDetalhesDto(
         int totalAvaliacoes,
         @Schema(description = "Nome do criador do jogo", example = "Team Cherry")
         String nomeCriador,
+        @Schema(description = "URL do trailer (Youtube/Clip)", example = "https://video.com/clip.mp4")
+        String urlTrailer,
+        @Schema(description = "Lista de URLs de screenshots", example = "['http://img1.com', 'http://img2.com']")
+        List<String> screenshots,
         @Schema(description = "Lista de avaliações dos administradores")
         List<AvaliacaoResponseDto> avaliacoesAdmin,
         @Schema(description = "Lista de avaliações dos usuários")
