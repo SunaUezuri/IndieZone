@@ -77,6 +77,7 @@ public class JogoMapper {
                 jogo.getUrlCapa(),
                 determinarNomeCriador(jogo),
                 jogo.getNotaMedia(),
+                jogo.getGeneros(),
                 jogo.getClassificacao()
         );
     }

@@ -51,6 +51,12 @@ public class JogoController {
 
     @GetMapping
     @Operation(summary = "Listar Todos", description = "Lista paginada ordenada por data de lançamento.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Jogos encontrados",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Nenhum jogo encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<JogoResponseDto>> listarTodos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -60,6 +66,12 @@ public class JogoController {
 
     @GetMapping("/search")
     @Operation(summary = "Buscar por Título", description = "Pesquisa jogos pelo nome (busca parcial case-insensitive).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Jogo encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<JogoResponseDto>> buscarPorTitulo(
             @RequestParam String termo,
             @RequestParam(defaultValue = "0") int page,
@@ -70,6 +82,12 @@ public class JogoController {
 
     @GetMapping("/genero/{genero}")
     @Operation(summary = "Filtrar por Gênero")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Jogo encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<JogoResponseDto>> buscarPorGenero(
             @PathVariable Genero genero,
             @RequestParam(defaultValue = "0") int page,
@@ -80,6 +98,12 @@ public class JogoController {
 
     @GetMapping("/plataforma/{plataforma}")
     @Operation(summary = "Filtrar por Plataforma")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Jogo encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<JogoResponseDto>> buscarPorPlataforma(
             @PathVariable Plataforma plataforma,
             @RequestParam(defaultValue = "0") int page,
@@ -90,8 +114,9 @@ public class JogoController {
 
     @GetMapping("/empresa/{id}")
     @Operation(summary = "Filtrar por Empresa")
+
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Sucesso"),
+            @ApiResponse(responseCode = "200", description = "Sucesso", content = @Content(schema = @Schema(implementation = JogoResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Empresa não encontrada", content = @Content(schema = @Schema(implementation = StandardError.class)))
     })
     public ResponseEntity<Page<JogoResponseDto>> buscarPorEmpresa(
@@ -105,7 +130,7 @@ public class JogoController {
     @GetMapping("/dev/{id}")
     @Operation(summary = "Filtrar por Desenvolvedor")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Sucesso"),
+            @ApiResponse(responseCode = "200", description = "Sucesso", content = @Content(schema = @Schema(implementation = JogoResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Desenvolvedor não encontrado", content = @Content(schema = @Schema(implementation = StandardError.class)))
     })
     public ResponseEntity<Page<JogoResponseDto>> buscarPorDev(
@@ -118,12 +143,20 @@ public class JogoController {
 
     @GetMapping("/top-avaliados")
     @Operation(summary = "Top 10 Melhores")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sucesso", content = @Content(schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogos não encontrados", content = @Content(schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<List<JogoResponseDto>> topAvaliados() {
         return ResponseEntity.ok(jogoService.buscarTop10MelhoresAvaliados());
     }
 
     @GetMapping("/lancamentos")
     @Operation(summary = "Lançamentos Recentes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sucesso", content = @Content(schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogos não encontrados", content = @Content(schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<List<JogoResponseDto>> topLancamentos() {
         return ResponseEntity.ok(jogoService.buscarTop10Lancamentos());
     }
@@ -144,6 +177,11 @@ public class JogoController {
 
     @GetMapping("/meus-jogos")
     @Operation(summary = "Meus Jogos (Área do Dev)", description = "Lista jogos do usuário logado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Jogos encontrados", content = @Content(schema = @Schema(implementation = JogoResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Jogos não encontrados", content = @Content(schema = @Schema(implementation = StandardError.class))),
+            @ApiResponse(responseCode = "403", description = "Acesso negado (Requer acesso de DEV)")
+    })
     public ResponseEntity<Page<JogoResponseDto>> listarMeusJogos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -167,6 +205,11 @@ public class JogoController {
 
     @PatchMapping("/{id}/generos")
     @Operation(summary = "Atualizar Gêneros")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Atualizado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão", content = @Content(schema = @Schema(implementation = StandardError.class))),
+            @ApiResponse(responseCode = "404", description = "Não encontrado", content = @Content(schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Void> atualizarGeneros(
             @PathVariable String id,
             @RequestBody @Valid JogoGenresPatchDto dto
@@ -194,7 +237,6 @@ public class JogoController {
             @ApiResponse(responseCode = "403", description = "Acesso negado")
     })
     public ResponseEntity<Void> syncPrices() {
-        // Agora chamamos diretamente a service especialista em preços
         precoService.solicitarAtualizacaoGlobalAdmin();
         return ResponseEntity.accepted().build();
     }

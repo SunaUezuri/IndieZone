@@ -35,6 +35,12 @@ public class EmpresaController {
 
     @GetMapping
     @Operation(summary = "Listar Todas", description = "Retorna uma lista paginada de todas as empresas cadastradas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empresas encontradas",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmpresaResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Nenhuma empresa encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<EmpresaResponseDto>> listarTodas(
             @Parameter(description = "Número da página", example = "0") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Itens por página", example = "10") @RequestParam(defaultValue = "10") int size
@@ -58,6 +64,12 @@ public class EmpresaController {
 
     @GetMapping("/pais")
     @Operation(summary = "Filtrar por País", description = "Busca empresas filtrando pelo país de origem.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empresa encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmpresaResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Nenhuma empresa encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<EmpresaResponseDto>> buscarPorPais(
             @Parameter(description = "Nome do país", example = "Brasil") @RequestParam String nome,
             @Parameter(description = "Número da página", example = "0") @RequestParam(defaultValue = "0") int page,
@@ -68,6 +80,12 @@ public class EmpresaController {
 
     @GetMapping("/nome")
     @Operation(summary = "Filtrar por Nome", description = "Busca empresas filtrando pelo nome.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empresa encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmpresaResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Nenhuma empresa encontrada",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
     public ResponseEntity<Page<EmpresaResponseDto>> buscarPorNome(
             @Parameter(description = "Nome da empresa", example = "Team Cherry") @RequestParam String nome,
             @Parameter(description = "Número da página", example = "0") @RequestParam(defaultValue = "0") int page,
