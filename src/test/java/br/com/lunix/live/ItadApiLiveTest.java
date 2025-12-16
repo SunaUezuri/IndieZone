@@ -1,7 +1,7 @@
 package br.com.lunix.live;
 
 import br.com.lunix.model.entities.PrecoPlataforma;
-import br.com.lunix.services.ItadApiService;
+import br.com.lunix.services.itad.ItadApiService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -52,13 +52,6 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     Page<Jogo> findByDevAutonomo(Usuario devAutonomo, Pageable pageable);
 
     /*
-        Busca jogos a partir da classificação indicativa do mesmo
-
-        @param classificacao
-    */
-    Page<Jogo> findByClassificacao(ClassificacaoIndicativa classificacao, Pageable pageable);
-
-    /*
         Busca os 10 jogos mais bem avaliados da aplicação
 
         return: Retorna uma lista com os 10 jogos com as maiores notas médias da aplicação
@@ -88,4 +81,7 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
 
     // Conta os jogos pela plataforma
     long countByPlataformas(Plataforma plataforma);
+
+    // Método para verificar se existe jogos com essa empresa
+    boolean existsByEmpresa(Empresa empresa);
 }

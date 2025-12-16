@@ -1,11 +1,10 @@
 package br.com.lunix.consumers;
 
-import br.com.lunix.services.JogoService;
+import br.com.lunix.services.jogo.JogoPrecoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,20 +13,20 @@ public class JogoPrecoConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(JogoPrecoConsumer.class);
 
-    private final JogoService jogoService;
+    private final JogoPrecoService precoService;
 
     /*
         Método que ouve a fila de atualização de preços
 
         @param jogoId - ID do jogo a ser atualizado
     */
-    @RabbitListener(queues = "${levelup.rabbitmq.queue}")
+    @RabbitListener(queues = "${indiezone.rabbitmq.queue}")
     public void consumirMensagem(String jogoId) {
         log.info("Mensagem recebida da fila. Iniciando atualização para Jogo ID: {}", jogoId);
 
         try {
             // A regra de negócio é delegada para a Service
-            boolean atualizou = jogoService.processarAtualizacaoDePreco(jogoId);
+            boolean atualizou = precoService.processarAtualizacaoLogica(jogoId);
 
             if (atualizou) {
                 // Rate limiting: Pausa estratégica para respeitar a API do ITAD

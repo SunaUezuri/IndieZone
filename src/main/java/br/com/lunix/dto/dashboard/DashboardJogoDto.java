@@ -6,5 +6,6 @@ import java.util.Map;
 public record DashboardJogoDto(
         long totalJogos,
         long totalJogosSemPreco,
-        Map<String, Long> jogosPorGenero
+        Map<String, Long> jogosPorGenero,
+        Map<String, Long> jogosPorPlataforma
 ) {}

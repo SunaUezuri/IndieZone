@@ -9,7 +9,7 @@ import org.springframework.amqp.core.Queue;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${levelup.rabbitmq.queue}")
+    @Value("${indiezone.rabbitmq.queue}")
     private String queueName;
 
     @Bean

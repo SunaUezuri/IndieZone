@@ -1,4 +1,4 @@
-package br.com.lunix.services;
+package br.com.lunix.services.usuario;
 
 import br.com.lunix.dto.usuario.*;
 import br.com.lunix.exceptions.RegraDeNegocioException;
@@ -19,8 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +65,7 @@ public class UsuarioService {
         // Transformando o dto em entidade
         Usuario usuario = mapper.toEntity(dto);
 
-        if (!dto.idEmpresa().isEmpty()) {
+        if (dto.idEmpresa() != null && !dto.idEmpresa().isEmpty()) {
             Empresa empresa = empresaRepository.findById(dto.idEmpresa())
                     .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada com o id"));
 

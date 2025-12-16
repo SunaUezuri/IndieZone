@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface EmpresaRepository extends MongoRepository<Empresa, String> {
 
-    // Método responsável por encontrar uma empresa pelo nome da mesma
+    // Método responsável por encontrar empresas pelo nome parcial
+    Page<Empresa> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+
+    // Método responsável por achar uma empresa pelo exato nome
     Optional<Empresa> findByNomeIgnoreCase(String nome);
 
     // Método responsável por encontrar uma empresa pelo país de origem dela

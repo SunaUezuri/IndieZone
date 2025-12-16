@@ -1,6 +1,7 @@
 package br.com.lunix.services;
 
 import br.com.lunix.dto.rawg.RawgRecords.RawgGameDto;
+import br.com.lunix.services.rawg.RawgApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

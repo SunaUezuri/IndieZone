@@ -1,8 +1,7 @@
 package br.com.lunix.config.security;
 
-import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.repository.UsuarioRepository;
-import br.com.lunix.services.TokenService;
+import br.com.lunix.services.usuario.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {

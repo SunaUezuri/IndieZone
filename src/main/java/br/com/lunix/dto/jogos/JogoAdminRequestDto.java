@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 public record JogoAdminRequestDto(
         @NotNull
         JogoRequestDto jogoData,
+        String devId,
         String empresaIdExistente
 ) {
 }

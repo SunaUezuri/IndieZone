@@ -1,6 +1,6 @@
 package br.com.lunix.scheduler;
 
-import br.com.lunix.services.JogoService;
+import br.com.lunix.services.jogo.JogoPrecoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ public class JogoPrecoScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(JogoPrecoScheduler.class);
 
-    private final JogoService jogoService;
+    private final JogoPrecoService precoService;
 
     /*
         Executa a atualização de preços automaticamente.
@@ -24,6 +24,6 @@ public class JogoPrecoScheduler {
     @Scheduled(cron = "0 0 3 * * *")
     public void agendarAtualizacaoDiaria() {
         log.info("SCHEDULER: Acordando para atualizar preços dos jogos...");
-        jogoService.executarRotinaAutomaticaDePrecos();
+        precoService.enviarTodosParaFila();
     }
 }

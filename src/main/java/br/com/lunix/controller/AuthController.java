@@ -5,7 +5,7 @@ import br.com.lunix.dto.usuario.TokenResponseDto;
 import br.com.lunix.dto.usuario.UsuarioLoginDto;
 import br.com.lunix.dto.usuario.UsuarioProfileDto;
 import br.com.lunix.dto.usuario.UsuarioRegistroDto;
-import br.com.lunix.services.UsuarioService;
+import br.com.lunix.services.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

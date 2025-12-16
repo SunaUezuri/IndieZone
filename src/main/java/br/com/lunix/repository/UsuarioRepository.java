@@ -1,5 +1,6 @@
 package br.com.lunix.repository;
 
+import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,7 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
         @param nome - Nome do usuário na aplicação.
     */
     Page<Usuario> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
+
+    // Método para verificar se um usuário existe pela empresa
+    boolean existsByEmpresa(Empresa empresa);
 }

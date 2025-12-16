@@ -5,7 +5,7 @@ import br.com.lunix.dto.empresa.EmpresaRequestDto;
 import br.com.lunix.dto.empresa.EmpresaResponseDto;
 import br.com.lunix.dto.empresa.EmpresaUpdateDto;
 import br.com.lunix.dto.error.StandardError;
-import br.com.lunix.services.EmpresaService;
+import br.com.lunix.services.empresa.EmpresaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,6 +64,16 @@ public class EmpresaController {
             @Parameter(description = "Itens por página", example = "10") @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(service.findByPais(nome, page, size));
+    }
+
+    @GetMapping("/nome")
+    @Operation(summary = "Filtrar por Nome", description = "Busca empresas filtrando pelo nome.")
+    public ResponseEntity<Page<EmpresaResponseDto>> buscarPorNome(
+            @Parameter(description = "Nome da empresa", example = "Team Cherry") @RequestParam String nome,
+            @Parameter(description = "Número da página", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Itens por página", example = "10") @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(service.findByNome(nome, page, size));
     }
 
     @PostMapping

@@ -1,4 +1,4 @@
-package br.com.lunix.services;
+package br.com.lunix.services.rawg;
 
 import br.com.lunix.dto.rawg.RawgRecords.RawgApiResponseDto;
 import br.com.lunix.dto.rawg.RawgRecords.RawgGameDto;

@@ -6,7 +6,7 @@ import br.com.lunix.dto.usuario.UsuarioProfileDto;
 import br.com.lunix.dto.usuario.UsuarioRolePatchDto;
 import br.com.lunix.dto.usuario.UsuarioUpdateDto;
 import br.com.lunix.model.entities.Usuario;
-import br.com.lunix.services.UsuarioService;
+import br.com.lunix.services.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

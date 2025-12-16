@@ -1,14 +1,13 @@
 package br.com.lunix.live;
 
 import br.com.lunix.dto.rawg.RawgRecords.RawgGameDto;
-import br.com.lunix.services.RawgApiService;
+import br.com.lunix.services.rawg.RawgApiService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 

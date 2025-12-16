@@ -1,4 +1,4 @@
-package br.com.lunix.services;
+package br.com.lunix.services.itad;
 
 import br.com.lunix.dto.itad.ItadRecords.*;
 import br.com.lunix.mapper.ItadMapper;

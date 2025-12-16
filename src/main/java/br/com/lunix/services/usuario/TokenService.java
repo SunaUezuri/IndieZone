@@ -1,4 +1,4 @@
-package br.com.lunix.services;
+package br.com.lunix.services.usuario;
 
 import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.model.enums.Role;

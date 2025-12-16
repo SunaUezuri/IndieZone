@@ -48,17 +48,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable) // Desliga CSRF (desnecessário para API REST)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // MUDANÇA CRUCIAL: Sem sessão no servidor
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         // Rotas Públicas (Login, Registro e Swagger)
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll() // Login e Register
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll() // Monitoramento
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
+                        .requestMatchers("/jogos/import/**").hasAnyRole("DEV", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/jogos/meus-jogos").hasAnyRole("DEV", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/jogos/rawg-import").hasAnyRole("DEV", "ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/jogos/dashboard").hasRole("ADMIN")
+                        // Mudamos a controller, então a rota base agora é /dashboard
+                        .requestMatchers("/admin/dashboard/**").hasRole("ADMIN")
+
+                        // Rota de sync de preços (JogoController)
+                        .requestMatchers(HttpMethod.POST, "/jogos/sync-prices").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/jogos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/empresas/**").permitAll()

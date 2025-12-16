@@ -1,4 +1,4 @@
-package br.com.lunix.services;
+package br.com.lunix.services.empresa;
 
 import br.com.lunix.dto.empresa.EmpresaDetalhesDto;
 import br.com.lunix.dto.empresa.EmpresaRequestDto;
@@ -12,6 +12,7 @@ import br.com.lunix.mapper.JogoMapper;
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.repository.EmpresaRepository;
 import br.com.lunix.repository.JogoRepository;
+import br.com.lunix.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +30,7 @@ public class EmpresaService {
 
     private final EmpresaRepository repository;
     private final JogoRepository jogoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     private final EmpresaMapper mapper;
     private final JogoMapper jogoMapper;
@@ -75,6 +77,19 @@ public class EmpresaService {
     public Page<EmpresaResponseDto> findByPais(String pais, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("nome").ascending());
         Page<Empresa> empresas = repository.findByPaisOrigemIgnoreCase(pais, pageable);
+
+        return empresas.map(mapper::toResponseDto);
+    }
+
+    /*
+        Busca empresas pelo nome das mesmas
+
+        @param nome - Nome da empresa
+    */
+    @Transactional(readOnly = true)
+    public Page<EmpresaResponseDto> findByNome(String nome, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nome").ascending());
+        Page<Empresa> empresas = repository.findByNomeContainingIgnoreCase(nome, pageable);
 
         return empresas.map(mapper::toResponseDto);
     }
@@ -129,9 +144,21 @@ public class EmpresaService {
     */
     @Transactional
     public void delete(String id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Empresa não encontrada com ID: " + id);
+        // Buscamos a empresa primeiro para garantir que existe
+        Empresa empresa = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada com ID: " + id));
+
+        // Verifica se existe ALGUM jogo vinculado a esta empresa
+        if (jogoRepository.existsByEmpresa(empresa)) {
+            throw new RegraDeNegocioException("Não é possível deletar a empresa pois existem JOGOS vinculados a ela.");
         }
-        repository.deleteById(id);
+
+        // Verifica se existe ALGUM usuário vinculado a esta empresa
+        if (usuarioRepository.existsByEmpresa(empresa)) {
+            throw new RegraDeNegocioException("Não é possível deletar a empresa pois existem USUÁRIOS vinculados a ela.");
+        }
+
+        // Se passou pelas validações, deleta
+        repository.delete(empresa);
     }
 }
