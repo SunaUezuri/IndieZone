@@ -1,13 +1,9 @@
+C:\Dev\lunix\src\test\java\br\com\lunix\services\ItadApiServiceTest.java
+C:\Dev\lunix\src\test\java\br\com\lunix\model\enums\ClassificacaoIndicativaTest.java
+C:\Dev\lunix\src\test\java\br\com\lunix\dto\JogoRequestDtoTest.java
 C:\Dev\lunix\src\test\java\br\com\lunix\mapper\RawgMapperTest.java
 C:\Dev\lunix\src\test\java\br\com\lunix\live\ItadApiLiveTest.java
 C:\Dev\lunix\src\test\java\br\com\lunix\live\RawgApiLiveTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\repository\AvaliacaoRepositoryTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\services\RawgApiServiceTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\services\ItadApiServiceTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\model\enums\ClassificacaoIndicativaTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\repository\EmpresaRepositoryTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\dto\JogoRequestDtoTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\repository\JogoRepositoryTest.java
 C:\Dev\lunix\src\test\java\br\com\lunix\dto\UniqueEmailValidatorTest.java
 C:\Dev\lunix\src\test\java\br\com\lunix\mapper\ItadMapperTest.java
-C:\Dev\lunix\src\test\java\br\com\lunix\repository\UsuarioRepositoryTest.java
+C:\Dev\lunix\src\test\java\br\com\lunix\services\RawgApiServiceTest.java

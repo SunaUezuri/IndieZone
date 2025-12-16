@@ -3,11 +3,7 @@ br\com\lunix\services\ItadApiServiceTest.class
 br\com\lunix\mapper\ItadMapperTest.class
 br\com\lunix\model\enums\ClassificacaoIndicativaTest.class
 br\com\lunix\live\ItadApiLiveTest.class
-br\com\lunix\repository\EmpresaRepositoryTest.class
+br\com\lunix\dto\JogoRequestDtoTest.class
+br\com\lunix\services\RawgApiServiceTest.class
 br\com\lunix\live\RawgApiLiveTest.class
 br\com\lunix\dto\UniqueEmailValidatorTest.class
-br\com\lunix\dto\JogoRequestDtoTest.class
-br\com\lunix\repository\AvaliacaoRepositoryTest.class
-br\com\lunix\services\RawgApiServiceTest.class
-br\com\lunix\repository\UsuarioRepositoryTest.class
-br\com\lunix\repository\JogoRepositoryTest.class

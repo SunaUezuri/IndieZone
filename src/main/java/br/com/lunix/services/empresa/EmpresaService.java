@@ -13,6 +13,7 @@ import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.repository.EmpresaRepository;
 import br.com.lunix.repository.JogoRepository;
 import br.com.lunix.repository.UsuarioRepository;
+import br.com.lunix.services.igdb.IgdbApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,8 @@ public class EmpresaService {
     private final JogoRepository jogoRepository;
     private final UsuarioRepository usuarioRepository;
 
+    private final IgdbApiService igdbApiService;
+
     private final EmpresaMapper mapper;
     private final JogoMapper jogoMapper;
 
@@ -49,6 +52,14 @@ public class EmpresaService {
         }
 
         Empresa entity = mapper.toEntity(dto);
+
+        if (entity.getUrlLogo() == null || entity.getUrlLogo().isBlank()) {
+            String logo = buscarLogoAutomatico(entity.getNome());
+            if (logo != null) {
+                entity.setUrlLogo(logo);
+            }
+        }
+
         entity = repository.save(entity);
 
         return mapper.toResponseDto(entity);
@@ -132,6 +143,14 @@ public class EmpresaService {
         }
 
         mapper.updateEntityFromDto(dto, empresa);
+
+        if (empresa.getUrlLogo() == null || empresa.getUrlLogo().isBlank()) {
+            String logo = buscarLogoAutomatico(empresa.getNome());
+            if (logo != null) {
+                empresa.setUrlLogo(logo);
+            }
+        }
+
         empresa = repository.save(empresa);
 
         return mapper.toResponseDto(empresa);
@@ -160,5 +179,14 @@ public class EmpresaService {
 
         // Se passou pelas validações, deleta
         repository.delete(empresa);
+    }
+
+    /*
+        Método privado para validar a busca de uma logo de empresa.
+
+        @param nomeEmpresa - nome da empresa a ser buscada
+    */
+    private String buscarLogoAutomatico(String nomeEmpresa) {
+        return igdbApiService.buscarLogoEmpresa(nomeEmpresa);
     }
 }
