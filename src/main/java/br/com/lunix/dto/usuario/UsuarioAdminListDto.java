@@ -12,6 +12,8 @@ import java.util.Set;
 public record UsuarioAdminListDto(
         @Schema(description = "ID do usuário", example = "69dg587ty1...")
         String id,
+        @Schema(description = "Nome do usuário", example = "Leandro")
+        String nome,
         @Schema(description = "E-mail cadastrado", example = "admin@lunix.com")
         String email,
         @Schema(description = "Roles de permissão do usuário", example = "ROLE_USER")

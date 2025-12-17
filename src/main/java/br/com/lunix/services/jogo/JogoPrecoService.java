@@ -1,7 +1,6 @@
 package br.com.lunix.services.jogo;
 
 import br.com.lunix.exceptions.RegraDeNegocioException;
-import br.com.lunix.exceptions.ResourceNotFoundException;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.PrecoPlataforma;
 import br.com.lunix.repository.JogoRepository;
@@ -48,13 +47,6 @@ public class JogoPrecoService {
         List<Jogo> todosJogos = jogoRepository.findAll();
         log.info("Disparando atualização em massa para {} jogos.", todosJogos.size());
         todosJogos.forEach(jogo -> rabbitTemplate.convertAndSend(queueName, jogo.getId()));
-    }
-
-    public void solicitarAtualizacaoManual(String jogoId) {
-        if (!jogoRepository.existsById(jogoId)) {
-            throw new ResourceNotFoundException("Jogo não encontrado.");
-        }
-        enviarParaFila(jogoId);
     }
 
     @CacheEvict(value = "jogo-detalhes", allEntries = true)

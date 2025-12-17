@@ -5,7 +5,6 @@ import br.com.lunix.dto.jogos.*;
 import br.com.lunix.exceptions.ResourceNotFoundException;
 import br.com.lunix.mapper.AvaliacaoMapper;
 import br.com.lunix.mapper.JogoMapper;
-import br.com.lunix.model.entities.Avaliacao;
 import br.com.lunix.model.entities.Empresa;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.Usuario;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
     Service responsável por orquestração das atividades de jogos
@@ -141,25 +139,40 @@ public class JogoService {
 
     // --- Consultas (Read Only) ---
 
+    /*
+        Busca um jogo para mais detalhes sobre o mesmo
+
+        @param id - Identificador único do jogo
+    */
     @Transactional(readOnly = true)
     @Cacheable(value = "jogos-detalhes", key = "#id")
     public JogoDetalhesDto buscarDetalhesPorId(String id) {
         Jogo jogo = buscarPorId(id);
-        List<Avaliacao> todasAvaliacoes = avaliacaoRepository.findAllByJogoOrderByDataCriacaoDesc(jogo);
 
-        return jogoMapper.toDetalhesDto(jogo,
-                mapReviewsByRole(todasAvaliacoes, Role.ROLE_ADMIN),
-                mapReviewsByRole(todasAvaliacoes, Role.ROLE_DEV),
-                mapReviewsByRole(todasAvaliacoes, Role.ROLE_USER));
+        Pageable top3 = PageRequest.of(0,3, Sort.by("dataCriacao").descending());
+
+        List<Usuario> admins = usuarioRepository.findByRolesContains(Role.ROLE_ADMIN);
+        List<Usuario> devs = usuarioRepository.findByRolesContains(Role.ROLE_DEV);
+        List<Usuario> users = usuarioRepository.findApenasUsuariosComuns();
+
+        var reviewsAdmin = buscarReviewsFiltradas(jogo, admins, top3);
+        var reviewsDev = buscarReviewsFiltradas(jogo, devs, top3);
+        var reviewsUser = buscarReviewsFiltradas(jogo, users, top3);
+
+        return jogoMapper.toDetalhesDto(jogo, reviewsAdmin, reviewsDev, reviewsUser);
     }
 
+    /*
+        Método que lista todos os jogos da aplicação.
+
+        @param page - Número da página.
+        @param size - Quantidade de itens por página.
+    */
     @Transactional(readOnly = true)
     public Page<JogoResponseDto> listarTodos(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataLancamento").descending());
         return jogoRepository.findAll(pageable).map(jogoMapper::toResponseDto);
     }
-
-    // ... buscarPorTitulo, buscarPorGenero, buscarPorPlataforma (Mantém iguais) ...
 
     /*
         Realiza a busca de jogos pelo título (Search Bar).
@@ -196,7 +209,6 @@ public class JogoService {
         @param plataforma - Enum da plataforma desejada.
         @param page - Número da página.
         @param size - Quantidade de itens por página.
-        return: Página com os jogos disponíveis na plataforma.
     */
     @Transactional(readOnly = true)
     public Page<JogoResponseDto> buscarPorPlataforma(Plataforma plataforma, int page, int size) {
@@ -204,6 +216,13 @@ public class JogoService {
         return jogoRepository.findByPlataformas(plataforma, pageable).map(jogoMapper::toResponseDto);
     }
 
+    /*
+        Filtra jogos feitos por uma empresa
+
+        @param empresaId - Identificador único da empresa.
+        @param page - Número da página.
+        @param size - Quantidade de itens por página.
+    */
     @Transactional(readOnly = true)
     public Page<JogoResponseDto> buscarPorEmpresa(String empresaId, int page, int size) {
         Empresa empresa = empresaRepository.findById(empresaId)
@@ -212,6 +231,13 @@ public class JogoService {
         return jogoRepository.findByEmpresa(empresa, pageable).map(jogoMapper::toResponseDto);
     }
 
+    /*
+        Método para buscar jogos feitos pro um dev autônomo
+
+        @param devId - Identificador único do desenvolvedor
+        @param page - Número da página a consultar
+        @param size - quantidade de itens que devem aparecer
+    */
     @Transactional(readOnly = true)
     public Page<JogoResponseDto> buscarPorDev(String devId, int page, int size) {
         Usuario dev = usuarioRepository.findById(devId)
@@ -220,13 +246,20 @@ public class JogoService {
         return jogoRepository.findByDevAutonomo(dev, pageable).map(jogoMapper::toResponseDto);
     }
 
+    /*
+        Método responsável por listar os jogos
+        feitos por um usuário.
+
+        @param page - Número da página a consultar
+        @param size - quantidade de itens que devem aparecer
+    */
     @Transactional(readOnly = true)
     public Page<JogoResponseDto> listarMeusJogos(int page, int size) {
         Usuario usuario = securityService.getUsuarioLogado();
         Pageable pageable = PageRequest.of(page, size, Sort.by("titulo").ascending());
 
         if (usuario.getRoles().contains(Role.ROLE_ADMIN)) {
-            return jogoRepository.findAll(pageable).map(jogoMapper::toResponseDto);
+            return jogoRepository.findAll(pageable).map(jogoMapper::toResponseDto); // Caso seja um admin pega todos os jogos
         }
         if (usuario.getEmpresa() != null) {
             return jogoRepository.findByEmpresa(usuario.getEmpresa(), pageable).map(jogoMapper::toResponseDto);
@@ -253,16 +286,32 @@ public class JogoService {
         return jogoRepository.findTop10ByOrderByDataLancamentoDesc().stream().map(jogoMapper::toResponseDto).toList();
     }
 
+    /*
+        Método privado para realizar a busca por id
 
+        @param id - Identificador único do jogo
+    */
     private Jogo buscarPorId(String id) {
         return jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado. ID: " + id));
     }
 
-    private List<AvaliacaoResponseDto> mapReviewsByRole(List<Avaliacao> avaliacoes, Role role) {
-        return avaliacoes.stream()
-                .filter(av -> av.getUsuario().getRoles().contains(role))
+    /*
+        Método privado para buscar avaliações filtradas
+
+        @param jogo - Jogo específico a se buscar avaliações
+        @param autores - Usuários autores das avaliações
+        @param pageable - Método de paginação
+    */
+    private List<AvaliacaoResponseDto> buscarReviewsFiltradas(Jogo jogo, List<Usuario> autores, Pageable pageable) {
+        if (autores.isEmpty()) {
+            return List.of();
+        }
+
+        return avaliacaoRepository.findByJogoAndUsuarioIn(jogo, autores, pageable)
+                .getContent()
+                .stream()
                 .map(avaliacaoMapper::toResponseDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

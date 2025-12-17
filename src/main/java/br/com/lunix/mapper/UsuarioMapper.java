@@ -80,6 +80,7 @@ public class UsuarioMapper {
 
         return new UsuarioAdminListDto(
                 usuario.getId(),
+                usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getRoles(),
                 usuario.isAtivo(),

@@ -34,7 +34,7 @@ public class RawgApiService {
     // Logger para a aplicação criar logs personalizados para o serviço, permitindo melhor depuração
     private static final Logger log = LoggerFactory.getLogger(RawgApiService.class);
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
     private final String apiKey;
     private final String apiBaseUrl;
 
