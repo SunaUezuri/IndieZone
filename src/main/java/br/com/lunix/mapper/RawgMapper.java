@@ -41,10 +41,11 @@ public class RawgMapper {
         }
 
         Jogo jogo = new Jogo();
+
         jogo.setTitulo(dto.name());
         jogo.setDescricao(dto.description());
-        jogo.setDataLancamento(dto.released());
         jogo.setUrlCapa(dto.backgroundImage());
+        jogo.setDataLancamento(dto.released());
 
         if (dto.shortScreenshots() != null) {
             List<String> urls = dto.shortScreenshots().stream()
@@ -79,7 +80,7 @@ public class RawgMapper {
     */
     private String extrairNomeDesenvolvedorPrincipal(List<RawgDeveloperDto> devDtos) {
         return Optional.ofNullable(devDtos)
-                .filter(list -> !list.isEmpty()) // Fiotra a lista garantindo que não esteja vazia.
+                .filter(list -> !list.isEmpty()) // Filtra a lista garantindo que não esteja vazia.
                 .map(list -> list.get(0).name()) // Mapeia a lista para pegar o primeiro nome que aparece.
                 .orElse(null);
     }

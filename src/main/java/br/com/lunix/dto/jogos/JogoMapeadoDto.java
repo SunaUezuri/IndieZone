@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
     pelo RawgMapper.
 */
 public record JogoMapeadoDto(
-        @Schema(description = "Jogo encontrado")
         Jogo jogo,
         @Schema(description = "Nome do desenvolvedor", example = "Team Cherry")
         String nomeDesenvolvedorPrincipal

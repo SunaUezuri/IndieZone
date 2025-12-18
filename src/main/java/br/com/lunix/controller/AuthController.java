@@ -1,10 +1,14 @@
 package br.com.lunix.controller;
 
 import br.com.lunix.dto.error.StandardError;
-import br.com.lunix.dto.usuario.TokenResponseDto;
+import br.com.lunix.dto.token.RefreshTokenRequestDto;
+import br.com.lunix.dto.token.TokenResponseDto;
 import br.com.lunix.dto.usuario.UsuarioLoginDto;
 import br.com.lunix.dto.usuario.UsuarioProfileDto;
 import br.com.lunix.dto.usuario.UsuarioRegistroDto;
+import br.com.lunix.repository.UsuarioRepository;
+import br.com.lunix.services.usuario.AuthService;
+import br.com.lunix.services.usuario.TokenService;
 import br.com.lunix.services.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +34,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UsuarioService service;
+    private final AuthService service;
 
     @PostMapping("/login")
     @Operation(summary = "Realizar login", description = "Autentica um usuário utilizando e-mail e senha. Retorna um Token JWT se as credenciais forem válidas")
@@ -67,6 +72,36 @@ public class AuthController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(novoUsuario);
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Refresh do token JWT", description = "Pega o refreshToken e gera um novo token com maior duração e invalida o antigo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Novo token gerado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioProfileDto.class))),
+            @ApiResponse(responseCode = "422", description = "Erro de validação",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))),
+            @ApiResponse(responseCode = "400", description = "Violação de regra de negócio",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
+    public ResponseEntity<TokenResponseDto> refreshToken(@RequestBody @Valid RefreshTokenRequestDto dto) {
+        return ResponseEntity.ok(service.refreshToken(dto.refreshToken()));
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "Realiza Logout", description = "Pega o token de sessão atual e invalida ele realizando o logout")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Logout realizado com sucessox",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioProfileDto.class))),
+            @ApiResponse(responseCode = "422", description = "Erro de validação",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))),
+            @ApiResponse(responseCode = "400", description = "Violação de regra de negócio",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
+    public ResponseEntity<Void> logout (HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        service.logout(token);
+        return ResponseEntity.noContent().build();
     }
 
 }

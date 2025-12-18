@@ -1,5 +1,6 @@
 package br.com.lunix.services.usuario;
 
+import br.com.lunix.dto.token.TokenResponseDto;
 import br.com.lunix.dto.usuario.*;
 import br.com.lunix.exceptions.RegraDeNegocioException;
 import br.com.lunix.exceptions.ResourceNotFoundException;
@@ -28,58 +29,6 @@ public class UsuarioService {
     private final EmpresaRepository empresaRepository;
 
     private final UsuarioMapper mapper;
-    private final TokenService tokenService;
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
-
-    /*
-        Realiza o login do usuário na aplicação e devolve um Token JWT
-        @param dto - Entrada de dados para o login
-    */
-    public TokenResponseDto login(UsuarioLoginDto dto) {
-
-        // Primeiro cria um token nativo do spring
-        var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
-
-        // Manager chama o UserDetailsServiceImpl
-        Authentication auth = this.authenticationManager.authenticate(usernamePassword);
-
-        // Gera o token JWT
-        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-
-        return new TokenResponseDto(token);
-    }
-
-    /*
-        Registra usuários na aplicação com criptografiade senha
-        @param dto - Dados de entrada do usuário para o registro
-    */
-    @Transactional
-    public UsuarioProfileDto registrar(UsuarioRegistroDto dto) {
-
-        // Validando se o email é único
-        if (repository.findByEmail(dto.email()).isPresent()) {
-            throw new RegraDeNegocioException("Este e-mail já está cadastrado.");
-        }
-
-        // Transformando o dto em entidade
-        Usuario usuario = mapper.toEntity(dto);
-
-        if (dto.idEmpresa() != null && !dto.idEmpresa().isEmpty()) {
-            Empresa empresa = empresaRepository.findById(dto.idEmpresa())
-                    .orElseThrow(() -> new ResourceNotFoundException("Empresa não encontrada com o id"));
-
-            usuario.setEmpresa(empresa);
-
-        }
-
-        // Criptografando a senha do usuário
-        usuario.setSenha(passwordEncoder.encode(dto.senha()));
-
-        usuario = repository.save(usuario);
-
-        return mapper.toProfileDto(usuario);
-    }
 
     /*
         Lista todos os usuários da aplicação de forma paginada
