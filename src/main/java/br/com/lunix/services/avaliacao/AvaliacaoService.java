@@ -196,12 +196,14 @@ public class AvaliacaoService {
         ResultadoAgregacaoDto dados = repository.calcularMediaDoJogo(jogo.getId());
 
         if (dados != null) {
+            System.out.println("Agregação SUCESSO: Média " + dados.mediaCalculada() + " | Total " + dados.totalAvaliacoes());
             // Arredonda para 1 casa decimal
             double mediaArredondada = Math.round(dados.mediaCalculada() * 10.0) / 10.0;
 
             jogo.setNotaMedia(mediaArredondada);
             jogo.setTotalAvaliacoes(dados.totalAvaliacoes());
         } else {
+            System.out.println("Agregação retornou NULL para o jogo: " + jogo.getTitulo());
             jogo.setNotaMedia(0.0);
             jogo.setTotalAvaliacoes(0);
         }

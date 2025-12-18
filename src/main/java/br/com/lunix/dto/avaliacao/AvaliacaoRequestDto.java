@@ -20,7 +20,7 @@ public record AvaliacaoRequestDto(
         @Min(value = 0, message = "A nota deve ser maior que 0")
         @Max(value = 10, message = "A nota não pode ser mais de 10")
         @Schema(description = "Nota que deve ser atribuída ao jogo", example = "8.5")
-        Integer nota,
+        Double nota,
         @Schema(description = "Comentário referente, dando motivo à avaliação", example = "Jogo muito bom! 10/10")
         @Size(max = 10000, message = "Número máximo de caracteres ultrapassado(10.000)")
         String comentario

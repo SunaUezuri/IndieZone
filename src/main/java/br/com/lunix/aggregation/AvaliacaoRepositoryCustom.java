@@ -1,4 +1,4 @@
-package br.com.lunix.aggregation.interfaces;
+package br.com.lunix.aggregation;
 
 import br.com.lunix.dto.avaliacao.ResultadoAgregacaoDto;
 

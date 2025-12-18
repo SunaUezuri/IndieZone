@@ -35,7 +35,7 @@ public class Avaliacao {
     @DBRef
     private Jogo jogo;
 
-    private int nota;
+    private double nota;
 
     private String comentario;
 

@@ -14,7 +14,7 @@ public record AvaliacaoResponseDto(
         @Schema(description = "Identificador único da avaliação", example = "650c...")
         String id,
         @Schema(description = "Nota dada na avaliação", example = "8.5")
-        int nota,
+        Double nota,
         @Schema(description = "Comentário inserido pelo usuário")
         String comentario,
         @Schema(description = "Data em que a avaliação foi postada", example = "2025-12-16")

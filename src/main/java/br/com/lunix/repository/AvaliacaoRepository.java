@@ -1,14 +1,12 @@
 package br.com.lunix.repository;
 
-import br.com.lunix.aggregation.interfaces.AvaliacaoRepositoryCustom;
+import br.com.lunix.aggregation.AvaliacaoRepositoryCustom;
 import br.com.lunix.model.entities.Avaliacao;
 import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.entities.Usuario;
-import br.com.lunix.model.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
