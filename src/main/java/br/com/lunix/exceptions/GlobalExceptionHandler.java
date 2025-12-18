@@ -93,4 +93,12 @@ public class GlobalExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, "Você não tem permissão para acessar este recurso", request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(AutoAvaliacaoException.class)
+    public ResponseEntity<StandardError> autoAvaliacao(AutoAvaliacaoException e, HttpServletRequest request) {
+        String error = "Conflito de interesse";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }

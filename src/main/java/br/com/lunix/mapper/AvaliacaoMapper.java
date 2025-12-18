@@ -2,6 +2,7 @@ package br.com.lunix.mapper;
 
 import br.com.lunix.dto.avaliacao.AvaliacaoRequestDto;
 import br.com.lunix.dto.avaliacao.AvaliacaoResponseDto;
+import br.com.lunix.dto.avaliacao.AvaliacaoUpdateDto;
 import br.com.lunix.dto.usuario.UsuarioPublicProfileDto;
 import br.com.lunix.model.entities.Avaliacao;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,13 @@ public class AvaliacaoMapper {
         avaliacao.setComentario(dto.comentario());
 
         return avaliacao;
+    }
+
+    public void updateFromEntityDto(AvaliacaoUpdateDto dto, Avaliacao avaliacao) {
+        if (dto == null || avaliacao == null) return;
+
+        avaliacao.setNota(dto.nota());
+        avaliacao.setComentario(dto.comentario());
     }
 
     /*
