@@ -27,6 +27,7 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final EmpresaRepository empresaRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final UsuarioMapper mapper;
 
@@ -95,6 +96,40 @@ public class UsuarioService {
 
         usuario = repository.save(usuario);
         return mapper.toAdminListDto(usuario);
+    }
+
+    /*
+        Atualiza os dados do usuário logado e ignora
+        os campos nulos
+
+        @param id - id do usuário logado
+        @param dto - dados de atualização
+    */
+    @Transactional
+    public UsuarioProfileDto atualizarProprioPerfil(String id, UsuarioSelfUpdateDto dto) {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+        // Atualiza Nome (se enviado)
+        if (dto.nome() != null && !dto.nome().isBlank()) {
+            usuario.setNome(dto.nome());
+        }
+
+        // Atualiza Email (se enviado)
+        if (dto.email() != null && !dto.email().isBlank()) {
+            if (!usuario.getEmail().equals(dto.email()) && repository.findByEmail(dto.email()).isPresent()) {
+                throw new RegraDeNegocioException("Este e-mail já está em uso.");
+            }
+            usuario.setEmail(dto.email());
+        }
+
+        // Atualiza Senha (se enviada)
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        }
+
+        usuario = repository.save(usuario);
+        return mapper.toProfileDto(usuario);
     }
 
     /*

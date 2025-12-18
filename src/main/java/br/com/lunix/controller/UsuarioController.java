@@ -1,10 +1,7 @@
 package br.com.lunix.controller;
 
 import br.com.lunix.dto.error.StandardError;
-import br.com.lunix.dto.usuario.UsuarioAdminListDto;
-import br.com.lunix.dto.usuario.UsuarioProfileDto;
-import br.com.lunix.dto.usuario.UsuarioRolePatchDto;
-import br.com.lunix.dto.usuario.UsuarioUpdateDto;
+import br.com.lunix.dto.usuario.*;
 import br.com.lunix.model.entities.Usuario;
 import br.com.lunix.services.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,6 +78,23 @@ public class UsuarioController {
             @RequestBody @Valid UsuarioUpdateDto dto
     ) {
         return ResponseEntity.ok(service.atualizar(id, dto));
+    }
+
+    @PatchMapping("/me")
+    @Operation(summary = "Atualizar meu perfil", description = "Permite que o usuário logado atualize seu nome, e-mail ou senha.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Perfil atualizado com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioProfileDto.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou e-mail já em uso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
+    public ResponseEntity<UsuarioProfileDto> atualizarPerfilProprio(
+            @RequestBody @Valid UsuarioSelfUpdateDto dto,
+            Authentication authentication
+    ) {
+        Usuario usuarioLogado = (Usuario) authentication.getPrincipal();
+
+        return ResponseEntity.ok(service.atualizarProprioPerfil(usuarioLogado.getId(), dto));
     }
 
     @PatchMapping("/{id}/roles")
