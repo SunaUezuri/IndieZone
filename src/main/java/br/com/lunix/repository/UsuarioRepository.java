@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,10 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
     // Método para verificar se um usuário existe pela empresa
     boolean existsByEmpresa(Empresa empresa);
+
+    // Conta usuários que possuem uma role específica
+    long countByRolesContains(Role role);
+
+    // Conta usuários criados após uma certa data
+    long countByDataCriacaoAfter(LocalDateTime data);
 }

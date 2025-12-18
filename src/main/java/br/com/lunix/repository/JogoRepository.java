@@ -82,6 +82,9 @@ public interface JogoRepository extends MongoRepository<Jogo, String> {
     // Conta os jogos pela plataforma
     long countByPlataformas(Plataforma plataforma);
 
+    // Conta os jogos com a empresa nula
+    long countByEmpresaIsNull();
+
     // Método para verificar se existe jogos com essa empresa
     boolean existsByEmpresa(Empresa empresa);
 }

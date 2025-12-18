@@ -1,6 +1,6 @@
 package br.com.lunix.controller;
 
-import br.com.lunix.dto.dashboard.DashboardJogoDto;
+import br.com.lunix.dto.dashboard.DashboardCompletoDto;
 import br.com.lunix.dto.error.StandardError;
 import br.com.lunix.services.dashboard.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,11 +31,11 @@ public class DashboardController {
     @Operation(summary = "Métricas de Jogos", description = "Retorna contagem total, jogos sem preço e distribuição por gênero.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Dados retornados com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = DashboardJogoDto.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = DashboardCompletoDto.class))),
             @ApiResponse(responseCode = "403", description = "Acesso negado (Requer ADMIN)",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
     })
-    public ResponseEntity<DashboardJogoDto> getDadosDashboard() {
-        return ResponseEntity.ok(dashboardService.gerarDadosDashboard());
+    public ResponseEntity<DashboardCompletoDto> getDadosDashboard() {
+        return ResponseEntity.ok(dashboardService.gerarDashboardCompleto());
     }
 }
