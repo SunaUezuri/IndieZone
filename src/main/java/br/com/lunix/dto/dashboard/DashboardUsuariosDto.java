@@ -8,6 +8,8 @@ import java.util.Map;
 public record DashboardUsuariosDto(
         @Schema(description = "Total de usuários da aplicação", example = "120")
         long totalUsuarios,
+        @Schema(description = "Total de usuários desativados", example = "10")
+        long usuariosDesativados,
         @Schema(description = "Total de usuários registrados no último mês", example = "23")
         long novosUsuariosUltimoMes,
         @Schema(description = "Map de role dos usuários", example = "{ ROLE_DEV: 12,... }")

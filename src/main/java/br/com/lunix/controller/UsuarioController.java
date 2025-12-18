@@ -102,7 +102,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @Operation(summary = "Desativar conta (Admin)", description = "Realiza a exclusão lógica (Soft Delete), definindo o status do usuário como inativo. Não apaga os dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário desativado com sucesso (Sem conteúdo de retorno)"),

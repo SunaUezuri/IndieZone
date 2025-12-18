@@ -42,6 +42,9 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     // Conta usuários que possuem uma role específica
     long countByRolesContains(Role role);
 
+    // Conta os usuários ativos
+    long countByAtivo(boolean ativo);
+
     // Conta usuários criados após uma certa data
     long countByDataCriacaoAfter(LocalDateTime data);
 }

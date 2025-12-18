@@ -49,13 +49,14 @@ public class DashboardService {
     private DashboardUsuariosDto montarDadosUsuarios() {
         long total = usuarioRepository.count();
         long novosMes = usuarioRepository.countByDataCriacaoAfter(LocalDateTime.now().minusDays(30));
+        long desativados = usuarioRepository.countByAtivo(false);
 
         Map<String, Long> porRole = new HashMap<>();
         porRole.put("ADMIN", usuarioRepository.countByRolesContains(Role.ROLE_ADMIN));
         porRole.put("DEV", usuarioRepository.countByRolesContains(Role.ROLE_DEV));
         porRole.put("USER", usuarioRepository.countByRolesContains(Role.ROLE_USER));
 
-        return new DashboardUsuariosDto(total, novosMes, porRole);
+        return new DashboardUsuariosDto(total, desativados, novosMes, porRole);
     }
 
     // Método para montar os dados de dashboard para o conteúdo principal

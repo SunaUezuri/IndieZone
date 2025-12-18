@@ -26,7 +26,7 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
-    @GetMapping("/jogos")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Métricas de Jogos", description = "Retorna contagem total, jogos sem preço e distribuição por gênero.")
     @ApiResponses(value = {
