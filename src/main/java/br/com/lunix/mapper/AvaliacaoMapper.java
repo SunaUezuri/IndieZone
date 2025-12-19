@@ -5,16 +5,14 @@ import br.com.lunix.dto.avaliacao.AvaliacaoResponseDto;
 import br.com.lunix.dto.avaliacao.AvaliacaoUpdateDto;
 import br.com.lunix.dto.usuario.UsuarioPublicProfileDto;
 import br.com.lunix.model.entities.Avaliacao;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AvaliacaoMapper {
 
     private final UsuarioMapper usuarioMapper;
-
-    public AvaliacaoMapper(UsuarioMapper usuarioMapper) {
-        this.usuarioMapper = usuarioMapper;
-    }
 
     /*
       Converte o DTO de requisição para a Entidade.
