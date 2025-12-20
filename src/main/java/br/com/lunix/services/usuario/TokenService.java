@@ -60,7 +60,7 @@ public class TokenService {
                     .withSubject(usuario.getEmail())
                     .withClaim("role", roles)
                     .withClaim("id", usuario.getId())
-                    .withExpiresAt(genExpirationDate())
+                    .withExpiresAt(genExpirationDate(minutesExpiration))
                     .sign(algorithm);
         } catch (JWTCreationException e){
             throw new RuntimeException("Erro ao gerar o token JWT", e);
@@ -118,8 +118,8 @@ public class TokenService {
 
         @return: Retorna um LocalDateTime com o tempo para o token expirar
     */
-    private Instant genExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    private Instant genExpirationDate(long minutes) {
+        return LocalDateTime.now().plusMinutes(minutes).toInstant(ZoneOffset.of("-03:00"));
     }
 
     /*
