@@ -1,8 +1,7 @@
-package br.com.lunix.services;
+package br.com.lunix.services.itad;
 
 import br.com.lunix.mapper.ItadMapper;
 import br.com.lunix.model.entities.PrecoPlataforma;
-import br.com.lunix.services.itad.ItadApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
