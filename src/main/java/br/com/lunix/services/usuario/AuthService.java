@@ -52,9 +52,9 @@ public class AuthService {
     }
 
     /*
-    Registra usuários na aplicação com criptografiade senha
-    @param dto - Dados de entrada do usuário para o registro
-*/
+        Registra usuários na aplicação com criptografiade senha
+        @param dto - Dados de entrada do usuário para o registro
+    */
     @Transactional
     public UsuarioProfileDto registrar(UsuarioRegistroDto dto) {
 

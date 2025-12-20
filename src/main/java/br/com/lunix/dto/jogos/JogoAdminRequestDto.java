@@ -3,6 +3,7 @@ package br.com.lunix.dto.jogos;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
+// DTO para o request de cadastro de jogos para admin e dev
 public record JogoAdminRequestDto(
         @NotNull
         @Schema(description = "Informações do jogo a serem inseridas")

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
 
+// DTO para devolver uma mensagem de erro mais agradável
 public record StandardError(
         @Schema(description = "Momento que o erro ocorreu", example = "2025-12-12T20:49:23.637Z")
         Instant timestamp,

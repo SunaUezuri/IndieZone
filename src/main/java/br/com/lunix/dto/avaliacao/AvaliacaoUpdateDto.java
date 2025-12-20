@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+// DTO de atualização de Update
 public record AvaliacaoUpdateDto(
         @NotNull(message = "Não se pode dar uma nota vazia")
         @Min(value = 0, message = "A nota deve ser maior que 0")

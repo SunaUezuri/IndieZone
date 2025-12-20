@@ -43,12 +43,14 @@ public class JogoPrecoService {
         rabbitTemplate.convertAndSend(queueName, jogoId);
     }
 
+    // Método para enviar todos os jogos para a fila
     public void enviarTodosParaFila() {
         List<Jogo> todosJogos = jogoRepository.findAll();
         log.info("Disparando atualização em massa para {} jogos.", todosJogos.size());
         todosJogos.forEach(jogo -> rabbitTemplate.convertAndSend(queueName, jogo.getId()));
     }
 
+    // Método para atualizar todos os jogos manualmente
     @CacheEvict(value = "jogo-detalhes", allEntries = true)
     public void solicitarAtualizacaoGlobalAdmin() {
         var usuario = securityService.getUsuarioLogado();

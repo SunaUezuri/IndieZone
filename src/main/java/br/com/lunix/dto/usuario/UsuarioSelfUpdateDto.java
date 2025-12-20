@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
+// DTO para atualização própria do usuário
 public record UsuarioSelfUpdateDto(
         @Schema(description = "Novo nome do usuário", example = "João da Silva")
         @Size(min = 3, message = "O nome deve ter no mínimo 3 caracteres")

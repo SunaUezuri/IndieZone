@@ -21,6 +21,12 @@ public class JogoImportService {
     private final RawgApiService rawgApiService;
     private final RawgMapper rawgMapper;
 
+    /*
+        Método que pega o título do jogo e devolve
+        dados encontrados na API
+
+        @param titulo - Título do jogo a ser importado
+    */
     public JogoMapeadoDto importarDadosRawg(String titulo) {
         List<RawgRecords.RawgGameDto> resultados = rawgApiService.buscarJogos(titulo, 1);
         if (resultados.isEmpty()) {

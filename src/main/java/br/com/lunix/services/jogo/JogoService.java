@@ -137,8 +137,6 @@ public class JogoService {
         jogoRepository.delete(jogo);
     }
 
-    // --- Consultas (Read Only) ---
-
     /*
         Busca um jogo para mais detalhes sobre o mesmo
 

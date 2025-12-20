@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 
 
 /*
-*   Serviço para buscar jogos utilizando a API do Rawg.Io
-*
-*   Busca jogos a partir do título do mesmo e devolve todas as informações necessárias,
-*   é utilizado para facilitar a inserção de jogos na plataforma por meio do formulário
+  Serviço para buscar jogos utilizando a API do Rawg.Io
+
+  Busca jogos a partir do título do mesmo e devolve todas as informações necessárias,
+  é utilizado para facilitar a inserção de jogos na plataforma por meio do formulário
 */
 @Service
 public class RawgApiService {
@@ -48,10 +48,10 @@ public class RawgApiService {
     }
 
     /*
-    *   Método principal para buscar os jogos no endpoint search
-    *
-    *   @param termoBuca - Título do jogo a ser procurado
-    *   @param limite - Quantidade de jogos limite que deve encontrar
+      Método principal para buscar os jogos no endpoint search
+
+      @param termoBuca - Título do jogo a ser procurado
+      @param limite - Quantidade de jogos limite que deve encontrar
     */
     public List<RawgGameDto> buscarJogos(String termoBusca, int limite) {
         log.info("Buscando jogos na RAWG com o termo '{}'", termoBusca);
