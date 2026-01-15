@@ -59,17 +59,15 @@ public class RawgMapperTest {
         assertThat(resultado.nomeDesenvolvedorPrincipal()).isEqualTo("Team Cherry");
 
         // Verifica os campos do jogo
-        Jogo jogo = resultado.jogo();
-        assertThat(jogo).isNotNull();
-        assertThat(jogo.getTitulo()).isEqualTo("Hollow Knight");
-        assertThat(jogo.getUrlCapa()).isEqualTo("url/capa.jpg");
-        assertThat(jogo.getDataLancamento()).isEqualTo(LocalDate.of(2017, 2, 24));
-        assertThat(jogo.getGeneros()).containsExactly(Genero.AVENTURA);
-        assertThat(jogo.getPlataformas()).containsExactly(Plataforma.PC);
-        assertThat(jogo.getClassificacao()).isEqualTo(ClassificacaoIndicativa.DEZ);
-        assertThat(jogo.getScreenshots()).hasSize(1);
-        assertThat(jogo.getScreenshots().get(0)).isEqualTo("https://img.com/screen1.jpg");
-        assertThat(jogo.getUrlTrailer()).isEqualTo("https://video.com/trailer.mp4");
+        assertThat(resultado.titulo()).isEqualTo("Hollow Knight");
+        assertThat(resultado.urlCapa()).isEqualTo("url/capa.jpg");
+        assertThat(resultado.dataLancamento()).isEqualTo(LocalDate.of(2017, 2, 24));
+        assertThat(resultado.generos()).containsExactly(Genero.AVENTURA);
+        assertThat(resultado.plataformas()).containsExactly(Plataforma.PC);
+        assertThat(resultado.classificacao()).isEqualTo(ClassificacaoIndicativa.DEZ);
+        assertThat(resultado.screenshots()).hasSize(1);
+        assertThat(resultado.screenshots().get(0)).isEqualTo("https://img.com/screen1.jpg");
+        assertThat(resultado.urlTrailer()).isEqualTo("https://video.com/trailer.mp4");
     }
 
     @Test
@@ -91,13 +89,12 @@ public class RawgMapperTest {
 
         // Verificação
         assertThat(resultado).isNotNull();
-        assertThat(resultado.jogo().getPlataformas()).isNotNull().isEmpty();
-        assertThat(resultado.jogo().getGeneros()).isNotNull().isEmpty();
+        assertThat(resultado.plataformas()).isNotNull().isEmpty();
+        assertThat(resultado.generos()).isNotNull().isEmpty();
         assertThat(resultado.nomeDesenvolvedorPrincipal()).isNull();
 
-        // Verifica se os novos campos lidam bem com null (não lançam exceção)
-        assertThat(resultado.jogo().getScreenshots()).isNullOrEmpty();
-        assertThat(resultado.jogo().getUrlTrailer()).isNull();
+        assertThat(resultado.screenshots()).isNullOrEmpty();
+        assertThat(resultado.urlTrailer()).isNull();
     }
 
     @Test
@@ -119,8 +116,8 @@ public class RawgMapperTest {
         // Verificação
         assertThat(resultado).isNotNull();
         // Garante que nossa rede de segurança 'default' está funcionando
-        assertThat(resultado.jogo().getGeneros()).containsExactly(Genero.OUTROS);
-        assertThat(resultado.jogo().getPlataformas()).containsExactly(Plataforma.OUTROS);
+        assertThat(resultado.generos()).containsExactly(Genero.OUTROS);
+        assertThat(resultado.plataformas()).containsExactly(Plataforma.OUTROS);
     }
 
     @Test

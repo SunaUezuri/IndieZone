@@ -2,7 +2,6 @@ package br.com.lunix.mapper;
 
 import br.com.lunix.dto.jogos.JogoMapeadoDto;
 import br.com.lunix.dto.rawg.RawgRecords.*;
-import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.enums.ClassificacaoIndicativa;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
@@ -40,33 +39,38 @@ public class RawgMapper {
             return null;
         }
 
-        Jogo jogo = new Jogo();
-
-        jogo.setTitulo(dto.name());
-        jogo.setDescricao(dto.description());
-        jogo.setUrlCapa(dto.backgroundImage());
-        jogo.setDataLancamento(dto.released());
-
+        // Extraindo as Screenshots da API
+        List<String> screenshots = Collections.emptyList();
         if (dto.shortScreenshots() != null) {
-            List<String> urls = dto.shortScreenshots().stream()
-                    .map(RawgScreenshotDto::image) // Pega só a URL da imagem
+            screenshots = dto.shortScreenshots().stream()
+                    .map(RawgScreenshotDto::image)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
-            jogo.setScreenshots(urls);
         }
 
+        // Extraindo a URL de um trailer
+        String urlTrailer = null;
         if (dto.clip() != null && dto.clip().clip() != null) {
-            jogo.setUrlTrailer(dto.clip().clip()); // Pega a URL do vídeo (SD ou HD)
+            urlTrailer = dto.clip().clip();
         }
 
-        // Mapeia as listas, traduzindo os valores da API para nossos Enums
-        jogo.setGeneros(toGeneroList(dto.genres()));
-        jogo.setPlataformas(toPlataformaList(dto.platforms()));
-        jogo.setClassificacao(toClassificacaoIndicativa(dto.esrbRating()));
-
+        List<Genero> generos = toGeneroList(dto.genres());
+        List<Plataforma> plataformas = toPlataformaList(dto.platforms());
+        ClassificacaoIndicativa classificacao = toClassificacaoIndicativa(dto.esrbRating());
         String nomeDev = extrairNomeDesenvolvedorPrincipal(dto.developers());
 
-        return new JogoMapeadoDto(jogo, nomeDev);
+        return new JogoMapeadoDto(
+                dto.name(),
+                dto.description(),
+                dto.backgroundImage(),
+                urlTrailer,
+                screenshots,
+                dto.released(),
+                classificacao,
+                generos,
+                plataformas,
+                nomeDev
+        );
     }
 
     /*
