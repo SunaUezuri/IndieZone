@@ -6,7 +6,6 @@ import br.com.lunix.dto.dashboard.DashboardEngajamentoDto;
 import br.com.lunix.dto.dashboard.DashboardUsuariosDto;
 import br.com.lunix.dto.jogos.JogoResponseDto;
 import br.com.lunix.mapper.JogoMapper;
-import br.com.lunix.model.entities.Avaliacao;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
 import br.com.lunix.model.enums.Role;

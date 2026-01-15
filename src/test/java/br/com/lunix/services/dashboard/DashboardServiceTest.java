@@ -8,10 +8,7 @@ import br.com.lunix.model.entities.Jogo;
 import br.com.lunix.model.enums.Genero;
 import br.com.lunix.model.enums.Plataforma;
 import br.com.lunix.model.enums.Role;
-import br.com.lunix.repository.AvaliacaoRepository;
-import br.com.lunix.repository.EmpresaRepository;
-import br.com.lunix.repository.JogoRepository;
-import br.com.lunix.repository.UsuarioRepository;
+import br.com.lunix.repository.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,9 +71,7 @@ class DashboardServiceTest {
 
         when(avaliacaoRepository.count()).thenReturn(2L);
 
-        Avaliacao av1 = new Avaliacao(); av1.setNota(8.0);
-        Avaliacao av2 = new Avaliacao(); av2.setNota(10.0);
-        when(avaliacaoRepository.findAll()).thenReturn(List.of(av1, av2));
+        when(avaliacaoRepository.calcularMediaGlobal()).thenReturn(9.0);
 
         DashboardCompletoDto result = service.gerarDashboardCompleto();
 
@@ -119,7 +114,7 @@ class DashboardServiceTest {
         when(jogoRepository.countByPlataformas(any())).thenReturn(0L);
 
         when(avaliacaoRepository.count()).thenReturn(0L);
-        when(avaliacaoRepository.findAll()).thenReturn(Collections.emptyList()); // Lista vazia para testar média 0
+        when(avaliacaoRepository.calcularMediaGlobal()).thenReturn(0.0); // Lista vazia para testar média 0
 
         DashboardCompletoDto result = service.gerarDashboardCompleto();
 
