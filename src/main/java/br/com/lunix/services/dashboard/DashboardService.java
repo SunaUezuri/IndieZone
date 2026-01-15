@@ -105,9 +105,7 @@ public class DashboardService {
     private DashboardEngajamentoDto montarDadosEngajamento() {
         long totalReviews = avaliacaoRepository.count();
 
-        List<Avaliacao> todas = avaliacaoRepository.findAll();
-        double mediaGlobal = todas.isEmpty() ? 0.0 :
-                todas.stream().mapToDouble(Avaliacao::getNota).average().orElse(0.0);
+        double mediaGlobal = avaliacaoRepository.calcularMediaGlobal();
 
         mediaGlobal = Math.round(mediaGlobal * 10.0) / 10.0;
 

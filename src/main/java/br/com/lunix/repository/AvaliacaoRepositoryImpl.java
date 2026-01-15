@@ -3,10 +3,12 @@ package br.com.lunix.repository;
 import br.com.lunix.aggregation.AvaliacaoRepositoryCustom;
 import br.com.lunix.dto.avaliacao.ResultadoAgregacaoDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 /*
@@ -19,6 +21,11 @@ public class AvaliacaoRepositoryImpl implements AvaliacaoRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
 
+    /*
+        Método responsável por calcular a média dos jogos no banco
+
+        @param jogoId - ID do jogo a ter a média calculada
+    */
     @Override
     public ResultadoAgregacaoDto calcularMediaDoJogo(String jogoId) {
         try {
@@ -42,5 +49,16 @@ public class AvaliacaoRepositoryImpl implements AvaliacaoRepositoryCustom {
             System.err.println("Erro ao converter ID para ObjectId: " + jogoId);
             return null;
         }
+    }
+
+    @Override
+    public Double calcularMediaGlobal() {
+        GroupOperation groupOperation = Aggregation.group().avg("nota").as("mediaCalculada");
+        Aggregation aggregation = Aggregation.newAggregation(groupOperation);
+
+        AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, "avaliacoes", Document.class);
+        Document doc = result.getUniqueMappedResult();
+
+        return doc != null ? doc.getDouble("mediaCalculada") : 0.0;
     }
 }
