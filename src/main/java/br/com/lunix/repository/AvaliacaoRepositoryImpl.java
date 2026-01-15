@@ -51,6 +51,7 @@ public class AvaliacaoRepositoryImpl implements AvaliacaoRepositoryCustom {
         }
     }
 
+    // Método responsável por calcular a média de todas as notas da aplicação
     @Override
     public Double calcularMediaGlobal() {
         GroupOperation groupOperation = Aggregation.group().avg("nota").as("mediaCalculada");
