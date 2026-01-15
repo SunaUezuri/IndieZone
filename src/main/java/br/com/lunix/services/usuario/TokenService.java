@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +118,7 @@ public class TokenService {
         @return: Retorna um LocalDateTime com o tempo para o token expirar
     */
     private Instant genExpirationDate(long minutes) {
-        return LocalDateTime.now().plusMinutes(minutes).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plus(minutes, ChronoUnit.MINUTES);
     }
 
     /*
