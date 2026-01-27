@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Rotas Públicas (Login, Registro e Swagger)
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll() // Login e Register
-                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll() // Monitoramento
+                        .requestMatchers("/actuator/**").permitAll() // Monitoramento
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                         .requestMatchers("/jogos/import/**").hasAnyRole("DEV", "ADMIN")
