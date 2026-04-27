@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            cd /home/root/indiezone
+            cd /root/indiezone
             
             # Garante que a pasta de logs existe
             mkdir -p logs-producao
