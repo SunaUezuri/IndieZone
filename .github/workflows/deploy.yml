@@ -1,35 +1,61 @@
-name: CI/CD Pipeline - Lunix
+name: CI/CD Indiezone API
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  test-and-build:
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
-    - name: Configurar JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      - name: Setup do Java (JDK 21)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
 
-    - name: Rodar Testes Unitários
-      run: mvn test
+      - name: Executar Testes Unitários
+        run: mvn test
 
-  deploy-to-render:
-    needs: test-and-build
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build e Push da Imagem
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/indiezone-api:latest
+
+  deploy-vps:
+    needs: build-and-push
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
     steps:
-    - name: Trigger Render Deploy
-      run: |
-        curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Executar comandos na VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd /home/root/indiezone
+            
+            # Garante que a pasta de logs existe
+            mkdir -p logs-producao
+            
+            # Baixa a nova imagem que acabou de passar nos testes
+            docker compose pull api-indiezone
+            
+            # Reinicia apenas a API (sem derrubar o banco)
+            docker compose up -d --no-deps api-indiezone
+            
+            # Limpa imagens antigas para não lotar o disco
+            docker image prune -f
