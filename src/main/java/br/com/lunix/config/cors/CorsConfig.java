@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,26 +17,21 @@ public class CorsConfig {
     private String allowedOrigins;
 
     @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Configura as origens permitidas
         config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
 
-        // Configura os métodos HTTP permitidos
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
-        // Configura os cabeçalhos permitidos
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "x-auth-token"));
         config.setExposedHeaders(List.of("x-auth-token"));
 
-        // Permite o envio de credenciais
         config.setAllowCredentials(true);
 
-        // Aplica a configuração nas rotas da API
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
-        return new CorsFilter(source);
+        return source;
     }
 }
